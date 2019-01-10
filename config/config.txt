@@ -224,7 +224,7 @@ CHECK_RANDOMIZER
 # FORUMURL http://tgstation13.org/phpBB/index.php
 
 ## Wiki address
-# WIKIURL http://www.tgstation13.org/wiki
+# WIKIURL https://terrastation.ddmers.com/wiki/Main_Page
 
 ## Rules address
 # RULESURL https://terrastation.ddmers.com/wiki/Rules
