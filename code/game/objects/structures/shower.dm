@@ -105,7 +105,7 @@
 		wash_obj(A)
 	else if(isturf(A))
 		wash_turf(A)
-	else if(ismob(A))
+	else if(isliving(A))
 		wash_mob(A)
 		check_heat(A)
 
@@ -131,7 +131,8 @@
 	if(iscarbon(L))
 		var/mob/living/carbon/M = L
 		. = TRUE
-		for(var/I in M.held_items)
+
+		for(var/obj/item/I in M.held_items)
 			wash_obj(I)
 
 		if(M.back && wash_obj(M.back))
@@ -219,12 +220,12 @@
 	if(current_temperature == SHOWER_FREEZING)
 		if(iscarbon(L))
 			C.adjust_bodytemperature(-80, 80)
-		to_chat(L, "<span class='warning'>The shower is freezing!</span>")
+		to_chat(L, "<span class='warning'>[src] is freezing!</span>")
 	else if(current_temperature == SHOWER_BOILING)
 		if(iscarbon(L))
 			C.adjust_bodytemperature(35, 0, 500)
 		L.adjustFireLoss(5)
-		to_chat(L, "<span class='danger'>The shower is searing!</span>")
+		to_chat(L, "<span class='danger'>[src] is searing!</span>")
 
 /obj/machinery/shower/proc/check_clothes(mob/living/carbon/human/H)
 	if(H.wear_suit && (H.wear_suit.clothing_flags & SHOWEROKAY))
@@ -237,12 +238,6 @@
 	if(H.wear_suit && !(H.wear_suit.clothing_flags & SHOWEROKAY))
 		. = TRUE
 	else if(H.w_uniform && !(H.w_uniform.clothing_flags & SHOWEROKAY))
-		. = TRUE
-	else if(H.shoes && !(H.shoes.clothing_flags & SHOWEROKAY))
-		. = TRUE
-	else if(H.ears && !(H.ears.clothing_flags & SHOWEROKAY))
-		. = TRUE
-	else if(H.gloves && !(H.gloves.clothing_flags & SHOWEROKAY))
 		. = TRUE
 	else if(H.wear_mask && !(H.wear_mask.clothing_flags & SHOWEROKAY))
 		. = TRUE
