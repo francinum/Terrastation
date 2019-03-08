@@ -5,14 +5,14 @@
 	icon_state = "barrel"
 	density = TRUE
 	anchored = FALSE
+	container_type = DRAINABLE | AMOUNT_VISIBLE
 	pressure_resistance = 2 * ONE_ATMOSPHERE
 	max_integrity = 300
 	var/open = FALSE
 	var/speed_multiplier = 1 //How fast it distills. Defaults to 100% (1.0). Lower is better.
 
 /obj/structure/fermenting_barrel/Initialize()
-	// Bluespace beakers, but without the portability or efficiency in circuits.
-	create_reagents(300, DRAINABLE | AMOUNT_VISIBLE)
+	create_reagents(300) //Bluespace beakers, but without the portability or efficiency in circuits.
 	. = ..()
 
 /obj/structure/fermenting_barrel/examine(mob/user)
@@ -56,12 +56,10 @@
 /obj/structure/fermenting_barrel/attack_hand(mob/user)
 	open = !open
 	if(open)
-		DISABLE_BITFIELD(reagents.flags, DRAINABLE)
-		ENABLE_BITFIELD(reagents.flags, REFILLABLE)
+		container_type = REFILLABLE | AMOUNT_VISIBLE
 		to_chat(user, "<span class='notice'>You open [src], letting you fill it.</span>")
 	else
-		ENABLE_BITFIELD(reagents.flags, DRAINABLE)
-		DISABLE_BITFIELD(reagents.flags, REFILLABLE)
+		container_type = DRAINABLE | AMOUNT_VISIBLE
 		to_chat(user, "<span class='notice'>You close [src], letting you draw from its tap.</span>")
 	update_icon()
 

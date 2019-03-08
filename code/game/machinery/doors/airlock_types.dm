@@ -2,6 +2,9 @@
 	Station Airlocks Regular
 */
 
+/obj/machinery/door/airlock/abandoned
+	abandoned = TRUE
+
 /obj/machinery/door/airlock/command
 	icon = 'icons/obj/doors/airlocks/station/command.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_com
@@ -16,6 +19,9 @@
 	icon = 'icons/obj/doors/airlocks/station/engineering.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_eng
 
+/obj/machinery/door/airlock/engineering/abandoned
+	abandoned = TRUE
+
 /obj/machinery/door/airlock/medical
 	icon = 'icons/obj/doors/airlocks/station/medical.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_med
@@ -25,6 +31,9 @@
 	icon = 'icons/obj/doors/airlocks/station/maintenance.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_mai
 	normal_integrity = 250
+
+/obj/machinery/door/airlock/maintenance/abandoned
+	abandoned = TRUE
 
 /obj/machinery/door/airlock/maintenance/external
 	name = "external airlock access"
@@ -40,6 +49,9 @@
 	name = "atmospherics airlock"
 	icon = 'icons/obj/doors/airlocks/station/atmos.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_atmo
+
+/obj/machinery/door/airlock/atmos/abandoned
+	abandoned = TRUE
 
 /obj/machinery/door/airlock/research
 	icon = 'icons/obj/doors/airlocks/station/research.dmi'
@@ -97,6 +109,9 @@
 	opacity = 0
 	glass = TRUE
 	normal_integrity = 400
+
+/obj/machinery/door/airlock/security/glass/abandoned
+	abandoned = TRUE
 
 /obj/machinery/door/airlock/medical/glass
 	opacity = 0
@@ -348,6 +363,9 @@
 	overlays_file = 'icons/obj/doors/airlocks/centcom/overlays.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_grunge
 
+/obj/machinery/door/airlock/grunge/abandoned
+	abandoned = TRUE
+
 //////////////////////////////////
 /*
 	Vault Airlocks
@@ -380,6 +398,9 @@
 	overlays_file = 'icons/obj/doors/airlocks/hatch/overlays.dmi'
 	note_overlay_file = 'icons/obj/doors/airlocks/hatch/overlays.dmi'
 	assemblytype = /obj/structure/door_assembly/door_assembly_mhatch
+
+/obj/machinery/door/airlock/maintenance_hatch/abandoned
+	abandoned = TRUE
 
 //////////////////////////////////
 /*

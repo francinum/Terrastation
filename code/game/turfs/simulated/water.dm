@@ -12,6 +12,3 @@
 	bullet_bounce_sound = null //needs a splashing sound one day.
 
 	footstep = FOOTSTEP_WATER
-	barefootstep = FOOTSTEP_WATER
-	clawfootstep = FOOTSTEP_WATER
-	heavyfootstep = FOOTSTEP_WATER

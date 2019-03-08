@@ -58,8 +58,6 @@
 			var/needed_amount = R.reqs[A]
 			for(var/B in contents)
 				if(ispath(B, A))
-					if (R.blacklist.Find(B))
-						continue
 					if(contents[B] >= R.reqs[A])
 						continue main_loop
 					else
@@ -333,7 +331,7 @@
 		return
 	switch(action)
 		if("make")
-			var/datum/crafting_recipe/TR = locate(params["recipe"]) in GLOB.crafting_recipes
+			var/datum/crafting_recipe/TR = locate(params["recipe"])
 			busy = TRUE
 			ui_interact(usr) //explicit call to show the busy display
 			var/fail_msg = construct_item(usr, TR)

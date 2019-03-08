@@ -4,7 +4,7 @@
 	name = "banana"
 	damage = 0
 	paralyze = 60
-	movement_type = FLYING | UNSTOPPABLE
+	forcedodge = TRUE
 	nodamage = TRUE
 	hitsound = 'sound/items/bikehorn.ogg'
 	icon = 'icons/obj/hydroponics/harvest.dmi'

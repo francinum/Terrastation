@@ -193,7 +193,7 @@
 	// devils do not need to breathe
 
 /mob/living/carbon/true_devil/is_literate()
-	return TRUE
+	return 1
 
 /mob/living/carbon/true_devil/ex_act(severity, ex_target)
 	if(!ascended)

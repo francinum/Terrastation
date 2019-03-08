@@ -114,9 +114,7 @@
 		target = AM
 
 		message_admins("[ADMIN_LOOKUPFLW(user)] planted [name] on [target.name] at [ADMIN_VERBOSEJMP(target)] with [det_time] second fuse")
-		log_game("[key_name(user)] planted [name] on [target.name] at [AREACOORD(user)] with a [det_time] second fuse")
-
-		notify_ghosts("[user] has planted \a [src] on [target] with a [det_time] second fuse!", source = target, action = NOTIFY_ORBIT)
+		log_game("[key_name(user)] planted [name] on [target.name] at [AREACOORD(user)] with [det_time] second fuse")
 
 		moveToNullspace()	//Yep
 
@@ -138,7 +136,7 @@
 		return
 	var/message_say = "FOR NO RAISIN!"
 	if(M.mind)
-		var/datum/mind/UM = M.mind
+		var/datum/mind/UM = M
 		if(UM.has_antag_datum(/datum/antagonist/nukeop) || UM.has_antag_datum(/datum/antagonist/traitor))
 			message_say = "FOR THE SYNDICATE!"
 		else if(UM.has_antag_datum(/datum/antagonist/changeling))
@@ -177,9 +175,9 @@
 	var/open_panel = 0
 	can_attach_mob = TRUE
 
-/obj/item/grenade/plastic/c4/Initialize()
-	. = ..()
+/obj/item/grenade/plastic/c4/New()
 	wires = new /datum/wires/explosive/c4(src)
+	..()
 
 /obj/item/grenade/plastic/c4/Destroy()
 	qdel(wires)

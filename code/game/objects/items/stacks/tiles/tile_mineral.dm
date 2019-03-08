@@ -78,11 +78,3 @@
 	turf_type = /turf/open/floor/mineral/plastitanium
 	mineralType = "plastitanium"
 	materials = list(MAT_TITANIUM=250, MAT_PLASMA=250)
-
-/obj/item/stack/tile/mineral/snow
-	name = "snow tile"
-	singular_name = "snow tile"
-	desc = "A layer of snow."
-	icon_state = "tile_snow"
-	turf_type = /turf/open/floor/grass/snow/safe
-	mineralType = "snow"

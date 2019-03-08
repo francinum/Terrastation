@@ -3,18 +3,16 @@
 
 /datum/mutation/human/nervousness
 	name = "Nervousness"
-	desc = "Causes the holder to stutter."
 	quality = MINOR_NEGATIVE
 	text_gain_indication = "<span class='danger'>You feel nervous.</span>"
 
-/datum/mutation/human/nervousness/on_life()
+/datum/mutation/human/nervousness/on_life(mob/living/carbon/human/owner)
 	if(prob(10))
 		owner.stuttering = max(10, owner.stuttering)
 
 
 /datum/mutation/human/wacky
 	name = "Wacky"
-	desc = "<span class='sans'>Unknown.</span>"
 	quality = MINOR_NEGATIVE
 	text_gain_indication = "<span class='sans'>You feel an off sensation in your voicebox.</span>"
 	text_lose_indication = "<span class='notice'>The off sensation passes.</span>"
@@ -25,7 +23,6 @@
 
 /datum/mutation/human/mute
 	name = "Mute"
-	desc = "Completely inhibits the vocal section of the brain."
 	quality = NEGATIVE
 	text_gain_indication = "<span class='danger'>You feel unable to express yourself at all.</span>"
 	text_lose_indication = "<span class='danger'>You feel able to speak freely again.</span>"
@@ -43,8 +40,8 @@
 
 /datum/mutation/human/smile
 	name = "Smile"
-	desc = "Causes the user to be in constant mania."
 	quality = MINOR_NEGATIVE
+	dna_block = NON_SCANNABLE
 	text_gain_indication = "<span class='notice'>You feel so happy. Nothing can be wrong with anything. :)</span>"
 	text_lose_indication = "<span class='notice'>Everything is terrible again. :(</span>"
 
@@ -72,7 +69,6 @@
 		message = replacetext(message," murder "," tease ")
 		message = replacetext(message," ugly "," beautiful ")
 		message = replacetext(message," douchbag "," nice guy ")
-		message = replacetext(message," douchebag "," nice guy ")
 		message = replacetext(message," whore "," lady ")
 		message = replacetext(message," nerd "," smart guy ")
 		message = replacetext(message," moron "," fun person ")
@@ -101,25 +97,41 @@
 
 /datum/mutation/human/unintelligible
 	name = "Unintelligible"
-	desc = "Partially inhibits the vocal center of the brain, severely distorting speech."
 	quality = NEGATIVE
+	dna_block = NON_SCANNABLE
 	text_gain_indication = "<span class='danger'>You can't seem to form any coherent thoughts!</span>"
 	text_lose_indication = "<span class='danger'>Your mind feels more clear.</span>"
 
-/datum/mutation/human/unintelligible/on_acquiring(mob/living/carbon/human/owner)
-	if(..())
-		return
-	owner.add_trait(TRAIT_UNINTELLIGIBLE_SPEECH, GENETIC_MUTATION)
+/datum/mutation/human/unintelligible/say_mod(message)
+	if(message)
+		var/prefix=copytext(message,1,2)
+		if(prefix == ";")
+			message = copytext(message,2)
+		else if(prefix in list(":","#"))
+			prefix += copytext(message,2,3)
+			message = copytext(message,3)
+		else
+			prefix=""
 
-/datum/mutation/human/unintelligible/on_losing(mob/living/carbon/human/owner)
-	if(..())
-		return
-	owner.remove_trait(TRAIT_UNINTELLIGIBLE_SPEECH, GENETIC_MUTATION)
+		var/list/words = splittext(message," ")
+		var/list/rearranged = list()
+		for(var/i=1;i<=words.len;i++)
+			var/cword = pick(words)
+			words.Remove(cword)
+			var/suffix = copytext(cword,length(cword)-1,length(cword))
+			while(length(cword)>0 && suffix in list(".",",",";","!",":","?"))
+				cword  = copytext(cword,1              ,length(cword)-1)
+				suffix = copytext(cword,length(cword)-1,length(cword)  )
+			if(length(cword))
+				rearranged += cword
+		message ="[prefix][jointext(rearranged," ")]"
+	return message
+
 
 /datum/mutation/human/swedish
 	name = "Swedish"
-	desc = "A horrible mutation originating from the distant past. Thought to be eradicated after the incident in 2037."
 	quality = MINOR_NEGATIVE
+	dna_block = NON_SCANNABLE
 	text_gain_indication = "<span class='notice'>You feel Swedish, however that works.</span>"
 	text_lose_indication = "<span class='notice'>The feeling of Swedishness passes.</span>"
 
@@ -127,9 +139,9 @@
 	if(message)
 		message = replacetext(message,"w","v")
 		message = replacetext(message,"j","y")
-		message = replacetext(message,"a",pick("å","ä","æ","a"))
+		message = replacetext(message,"a",pick("�","�","�","a"))
 		message = replacetext(message,"bo","bjo")
-		message = replacetext(message,"o",pick("ö","ø","o"))
+		message = replacetext(message,"o",pick("�","�","o"))
 		if(prob(30))
 			message += " Bork[pick("",", bork",", bork, bork")]!"
 	return message
@@ -137,8 +149,8 @@
 
 /datum/mutation/human/chav
 	name = "Chav"
-	desc = "Unknown"
 	quality = MINOR_NEGATIVE
+	dna_block = NON_SCANNABLE
 	text_gain_indication = "<span class='notice'>Ye feel like a reet prat like, innit?</span>"
 	text_lose_indication = "<span class='notice'>You no longer feel like being rude and sassy.</span>"
 
@@ -171,13 +183,12 @@
 
 /datum/mutation/human/elvis
 	name = "Elvis"
-	desc = "A terrifying mutation named after its 'patient-zero'."
 	quality = MINOR_NEGATIVE
-	locked = TRUE
+	dna_block = NON_SCANNABLE
 	text_gain_indication = "<span class='notice'>You feel pretty good, honeydoll.</span>"
 	text_lose_indication = "<span class='notice'>You feel a little less conversation would be great.</span>"
 
-/datum/mutation/human/elvis/on_life()
+/datum/mutation/human/elvis/on_life(mob/living/carbon/human/owner)
 	switch(pick(1,2))
 		if(1)
 			if(prob(15))
@@ -196,19 +207,17 @@
 		message = replacetext(message," man ",pick(" son "," buddy "," brother"," pal "," friendo "))
 		message = replacetext(message," out of "," outta ")
 		message = replacetext(message," thank you "," thank you, thank you very much ")
-		message = replacetext(message," thanks "," thank you, thank you very much ")
 		message = replacetext(message," what are you "," whatcha ")
 		message = replacetext(message," yes ",pick(" sure", "yea "))
 		message = replacetext(message," faggot "," square ")
-		message = replacetext(message," muh valids "," my kicks ")
+		message = replacetext(message," muh valids "," getting my kicks ")
 	return trim(message)
 
 
 /datum/mutation/human/stoner
 	name = "Stoner"
-	desc = "A common mutation that severely decreases intelligence."
 	quality = NEGATIVE
-	locked = TRUE
+	dna_block = NON_SCANNABLE
 	text_gain_indication = "<span class='notice'>You feel...totally chill, man!</span>"
 	text_lose_indication = "<span class='notice'>You feel like you have a better sense of time.</span>"
 

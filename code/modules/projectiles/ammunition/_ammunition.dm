@@ -65,7 +65,7 @@
 	else
 		return ..()
 
-/obj/item/ammo_casing/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+/obj/item/ammo_casing/throw_impact(atom/A)
 	if(heavy_metal)
 		bounce_away(FALSE, NONE)
 	. = ..()

@@ -89,7 +89,7 @@
 		var/turf/T = get_turf(C)
 		for(var/i in 1 to 3)
 			C.apply_damage(30, BRUTE, BODY_ZONE_HEAD)
-			new /obj/effect/gibspawner/generic(T, C)
+			new /obj/effect/gibspawner/generic(T)
 			sleep(1)
 		C.ghostize()
 		var/obj/item/bodypart/head/rip_u = C.get_bodypart(BODY_ZONE_HEAD)
@@ -113,8 +113,7 @@
 
 
 /obj/singularity/bullet_act(obj/item/projectile/P)
-	qdel(P)
-	return BULLET_ACT_HIT //Will there be an impact? Who knows.  Will we see it? No.
+	return 0 //Will there be an impact? Who knows.  Will we see it? No.
 
 
 /obj/singularity/Bump(atom/A)

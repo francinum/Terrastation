@@ -4,13 +4,10 @@
 
 	. = ..()
 
-	var/old_icon = icon_state
-	if("[icon_state]_dead" in icon_states(icon))
+	if("[icon_state]_dead" in icon_states(src.icon,1))
 		icon_state = "[icon_state]_dead"
 	else
 		icon_state = "ai_dead"
-	if("[old_icon]_death_transition" in icon_states(icon))
-		flick("[old_icon]_death_transition", src)
 
 	cameraFollow = null
 

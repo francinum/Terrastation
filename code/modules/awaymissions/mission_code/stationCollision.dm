@@ -22,8 +22,7 @@
 /obj/effect/landmark/sc_bible_spawner
 	name = "Safecode hint spawner"
 
-/obj/effect/landmark/sc_bible_spawner/Initialize()
-	..()
+/obj/effect/landmark/sc_bible_spawner/New()
 	var/obj/item/storage/book/bible/B = new /obj/item/storage/book/bible/booze(loc)
 	B.name = "The Holy book of the Geometer"
 	B.deity_name = "Narsie"
@@ -33,7 +32,7 @@
 	B.righthand_file = 'icons/mob/inhands/misc/books_righthand.dmi'
 	new /obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_bible(B)
 	new /obj/item/pen(B)
-	return INITIALIZE_HINT_QDEL
+	qdel(src)
 
 /*
  * Guns - I'm making these specifically so that I dont spawn a pile of fully loaded weapons on the map.
@@ -85,14 +84,12 @@ GLOBAL_VAR_INIT(sc_safecode5, "[rand(0,9)]")
 /obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_prison
 	name = "smudged paper"
 
-/obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_prison/Initialize()
-	. = ..()
+/obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_prison/New()
 	info = "<i>The ink is smudged, you can only make out a couple numbers:</i> '[GLOB.sc_safecode1]**[GLOB.sc_safecode4]*'"
 
 /obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_hydro
 	name = "shredded paper"
-/obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_hydro/Initialize()
-	. = ..()
+/obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_hydro/New()
 	info = "<i>Although the paper is shredded, you can clearly see the number:</i> '[GLOB.sc_safecode2]'"
 
 /obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_caf
@@ -102,8 +99,7 @@ GLOBAL_VAR_INIT(sc_safecode5, "[rand(0,9)]")
 
 /obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_bible
 	name = "hidden paper"
-/obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_bible/Initialize()
-	. = ..()
+/obj/item/paper/fluff/awaymissions/stationcollision/safehint_paper_bible/New()
 	info = {"<i>It would appear that the pen hidden with the paper had leaked ink over the paper.
 			However you can make out the last three digits:</i>'[GLOB.sc_safecode3][GLOB.sc_safecode4][GLOB.sc_safecode5]'
 			"}
@@ -127,8 +123,8 @@ GLOBAL_VAR_INIT(sc_safecode5, "[rand(0,9)]")
 /obj/item/storage/secure/safe/sc_ssafe
 	name = "Captain's secure safe"
 
-/obj/item/storage/secure/safe/sc_ssafe/Initialize()
-	. = ..()
+/obj/item/storage/secure/safe/sc_ssafe/New()
+	..()
 	l_code = "[GLOB.sc_safecode1][GLOB.sc_safecode2][GLOB.sc_safecode3][GLOB.sc_safecode4][GLOB.sc_safecode5]"
 	l_set = 1
 	new /obj/item/gun/energy/mindflayer(src)

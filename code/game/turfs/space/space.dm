@@ -19,6 +19,7 @@
 	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
 	bullet_bounce_sound = null
 
+
 /turf/open/space/basic/New()	//Do not convert to Initialize
 	//This is used to optimize the map loader
 	return
@@ -133,7 +134,7 @@
 	if ((!(A) || src != A.loc))
 		return
 
-	if(destination_z && destination_x && destination_y && !(A.pulledby || !A.can_be_z_moved))
+	if(destination_z && destination_x && destination_y)
 		var/tx = destination_x
 		var/ty = destination_y
 		var/turf/DT = locate(tx, ty, destination_z)
@@ -156,10 +157,8 @@
 		A.forceMove(DT)
 		if(AM)
 			var/turf/T = get_step(A.loc,turn(A.dir, 180))
-			AM.can_be_z_moved = FALSE
 			AM.forceMove(T)
 			A.start_pulling(AM)
-			AM.can_be_z_moved = TRUE
 
 		//now we're on the new z_level, proceed the space drifting
 		stoplag()//Let a diagonal move finish, if necessary

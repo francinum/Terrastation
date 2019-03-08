@@ -19,8 +19,8 @@
 	force_string = "robust... against germs"
 	var/insertable = TRUE
 
-/obj/item/mop/Initialize()
-	. = ..()
+/obj/item/mop/New()
+	..()
 	create_reagents(mopcap)
 
 

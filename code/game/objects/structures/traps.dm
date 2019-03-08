@@ -63,10 +63,7 @@
 		return
 	if(ismob(AM))
 		var/mob/M = AM
-		if(M.mind in immune_minds)
-			return
-		if(M.anti_magic_check())
-			flare()
+		if(M.mind in immune_minds || M.anti_magic_check())
 			return
 	if(charges <= 0)
 		return
@@ -136,6 +133,7 @@
 	density = TRUE
 	time_between_triggers = 1200 //Exists for 2 minutes
 
-/obj/structure/trap/ward/Initialize()
-	. = ..()
+
+/obj/structure/trap/ward/New()
+	..()
 	QDEL_IN(src, time_between_triggers)

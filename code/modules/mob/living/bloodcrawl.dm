@@ -13,9 +13,8 @@
 
 /obj/effect/dummy/phased_mob/slaughter/ex_act()
 	return
-
 /obj/effect/dummy/phased_mob/slaughter/bullet_act()
-	return BULLET_ACT_FORCE_PIERCE
+	return
 
 /obj/effect/dummy/phased_mob/slaughter/singularity_act()
 	return
@@ -48,7 +47,7 @@
 	var/turf/mobloc = get_turf(src.loc)
 
 	src.visible_message("<span class='warning'>[src] sinks into the pool of blood!</span>")
-	playsound(get_turf(src), 'sound/magic/enter_blood.ogg', 50, 1, -1)
+	playsound(get_turf(src), 'sound/magic/enter_blood.ogg', 100, 1, -1)
 	// Extinguish, unbuckle, stop being pulled, set our location into the
 	// dummy object
 	var/obj/effect/dummy/phased_mob/slaughter/holder = new /obj/effect/dummy/phased_mob/slaughter(mobloc)
@@ -99,7 +98,7 @@
 		sound = 'sound/magic/demon_consume.ogg'
 
 	for(var/i in 1 to 3)
-		playsound(get_turf(src),sound, 50, 1)
+		playsound(get_turf(src),sound, 100, 1)
 		sleep(30)
 
 	if(!victim)
@@ -139,21 +138,18 @@
 	name = "blood crawl"
 	desc = "You are unable to hold anything while in this form."
 	icon = 'icons/effects/blood.dmi'
-	item_flags = ABSTRACT | DROPDEL
-
-/obj/item/bloodcrawl/Initialize()
-	. = ..()
-	add_trait(TRAIT_NODROP, ABSTRACT_ITEM_TRAIT)
+	item_flags = NODROP | ABSTRACT
 
 /mob/living/proc/exit_blood_effect(obj/effect/decal/cleanable/B)
-	playsound(get_turf(src), 'sound/magic/exit_blood.ogg', 50, 1, -1)
+	playsound(get_turf(src), 'sound/magic/exit_blood.ogg', 100, 1, -1)
 	//Makes the mob have the color of the blood pool it came out of
 	var/newcolor = rgb(149, 10, 10)
 	if(istype(B, /obj/effect/decal/cleanable/xenoblood))
 		newcolor = rgb(43, 186, 0)
 	add_atom_colour(newcolor, TEMPORARY_COLOUR_PRIORITY)
 	// but only for a few seconds
-	addtimer(CALLBACK(src, /atom/.proc/remove_atom_colour, TEMPORARY_COLOUR_PRIORITY, newcolor), 6 SECONDS)
+	spawn(30)
+		remove_atom_colour(TEMPORARY_COLOUR_PRIORITY, newcolor)
 
 /mob/living/proc/phasein(obj/effect/decal/cleanable/B)
 	if(src.notransform)

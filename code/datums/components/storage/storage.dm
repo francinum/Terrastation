@@ -96,7 +96,6 @@
 	RegisterSignal(parent, COMSIG_ITEM_PICKUP, .proc/signal_on_pickup)
 
 	RegisterSignal(parent, COMSIG_MOVABLE_POST_THROW, .proc/close_all)
-	RegisterSignal(parent, COMSIG_MOVABLE_MOVED, .proc/on_move)
 
 	RegisterSignal(parent, COMSIG_CLICK_ALT, .proc/on_alt_click)
 	RegisterSignal(parent, COMSIG_MOUSEDROP_ONTO, .proc/mousedrop_onto)
@@ -155,12 +154,6 @@
 	for(var/i in master.slaves)
 		var/datum/component/storage/slave = i
 		next += slave.parent
-
-/datum/component/storage/proc/on_move()
-	var/atom/A = parent
-	for(var/mob/living/L in can_see_contents())
-		if(!L.CanReach(A))
-			hide_from(L)
 
 /datum/component/storage/proc/attack_self(datum/source, mob/M)
 	if(locked)
@@ -240,7 +233,7 @@
 
 /datum/component/storage/proc/quick_empty(mob/M)
 	var/atom/A = parent
-	if(!M.canUseStorage() || !A.Adjacent(M) || M.incapacitated())
+	if((!ishuman(M) && (A.loc != M)) || (M.stat != CONSCIOUS) || M.incapacitated())
 		return
 	if(locked)
 		to_chat(M, "<span class='warning'>[parent] seems to be locked!</span>")
@@ -293,10 +286,10 @@
 	for(var/obj/item/I in real_location.contents)
 		if(QDELETED(I))
 			continue
-		if(!.["[I.type]-[I.name]"])
-			.["[I.type]-[I.name]"] = new /datum/numbered_display(I, 1)
+		if(!.[I.type])
+			.[I.type] = new /datum/numbered_display(I, 1)
 		else
-			var/datum/numbered_display/ND = .["[I.type]-[I.name]"]
+			var/datum/numbered_display/ND = .[I.type]
 			ND.number++
 
 //This proc determines the size of the inventory to be displayed. Please touch it only if you know what you're doing.
@@ -594,9 +587,8 @@
 			if(!stop_messages)
 				to_chat(M, "<span class='warning'>[IP] cannot hold [I] as it's a storage item of the same size!</span>")
 			return FALSE //To prevent the stacking of same sized storage items.
-	if(I.has_trait(TRAIT_NODROP)) //SHOULD be handled in unEquip, but better safe than sorry.
-		if(!stop_messages)
-			to_chat(M, "<span class='warning'>\the [I] is stuck to your hand, you can't put it in \the [host]!</span>")
+	if(I.item_flags & NODROP) //SHOULD be handled in unEquip, but better safe than sorry.
+		to_chat(M, "<span class='warning'>\the [I] is stuck to your hand, you can't put it in \the [host]!</span>")
 		return FALSE
 	var/datum/component/storage/concrete/master = master()
 	if(!istype(master))
@@ -607,7 +599,7 @@
 	return FALSE
 
 //This proc handles items being inserted. It does not perform any checks of whether an item can or can't be inserted. That's done by can_be_inserted()
-//The prevent_warning parameter will stop the insertion message from being displayed. It is intended for cases where you are inserting multiple items at once,
+//The stop_warning parameter will stop the insertion message from being displayed. It is intended for cases where you are inserting multiple items at once,
 //such as when picking up all the items on a tile with one click.
 /datum/component/storage/proc/handle_item_insertion(obj/item/I, prevent_warning = FALSE, mob/M, datum/component/storage/remote)
 	var/atom/parent = src.parent
@@ -740,30 +732,16 @@
 	return hide_from(target)
 
 /datum/component/storage/proc/on_alt_click(datum/source, mob/user)
-	if(!isliving(user) || !user.CanReach(parent))
+	if(!isliving(user) || user.incapacitated() || !quickdraw || locked || !user.CanReach(parent))
 		return
-	if(locked)
-		to_chat(user, "<span class='warning'>[parent] seems to be locked!</span>")
+	var/obj/item/I = locate() in real_location()
+	if(!I)
 		return
-
-	var/atom/A = parent
-	if(!quickdraw)
-		A.add_fingerprint(user)
-		user_show_to_mob(user)
-		playsound(A, "rustle", 50, 1, -5)
+	remove_from_storage(I, get_turf(user))
+	if(!user.put_in_hands(I))
+		to_chat(user, "<span class='notice'>You fumble for [I] and it falls on the floor.</span>")
 		return
-
-	if(!user.incapacitated())
-		var/obj/item/I = locate() in real_location()
-		if(!I)
-			return
-		A.add_fingerprint(user)
-		remove_from_storage(I, get_turf(user))
-		if(!user.put_in_hands(I))
-			to_chat(user, "<span class='notice'>You fumble for [I] and it falls on the floor.</span>")
-			return
-		user.visible_message("<span class='warning'>[user] draws [I] from [parent]!</span>", "<span class='notice'>You draw [I] from [parent].</span>")
-		return
+	user.visible_message("<span class='warning'>[user] draws [I] from [parent]!</span>", "<span class='notice'>You draw [I] from [parent].</span>")
 
 /datum/component/storage/proc/action_trigger(datum/signal_source, datum/action/source)
 	gather_mode_switch(source.owner)

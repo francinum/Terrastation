@@ -1,59 +1,63 @@
-/// The light switch. Can have multiple per area.
+// the light switch
+// can have multiple per area
+// can also operate on non-loc area through "otherarea" var
 /obj/machinery/light_switch
 	name = "light switch"
 	icon = 'icons/obj/power.dmi'
 	icon_state = "light1"
 	desc = "Make dark."
-	/// Set this to a string, path, or area instance to control that area
-	/// instead of the switch's location.
+	var/on = TRUE
 	var/area/area = null
+	var/otherarea = null
 
 /obj/machinery/light_switch/Initialize()
 	. = ..()
-	if(istext(area))
-		area = text2path(area)
-	if(ispath(area))
-		area = GLOB.areas_by_type[area]
-	if(!area)
-		area = get_area(src)
+	area = get_area(src)
+
+	if(otherarea)
+		area = locate(text2path("/area/[otherarea]"))
 
 	if(!name)
 		name = "light switch ([area.name])"
 
-	update_icon()
+	on = area.lightswitch
+	updateicon()
 
-/obj/machinery/light_switch/update_icon()
+/obj/machinery/light_switch/proc/updateicon()
 	if(stat & NOPOWER)
 		icon_state = "light-p"
 	else
-		if(area.lightswitch)
+		if(on)
 			icon_state = "light1"
 		else
 			icon_state = "light0"
 
 /obj/machinery/light_switch/examine(mob/user)
 	..()
-	to_chat(user, "It is [area.lightswitch ? "on" : "off"].")
+	to_chat(user, "It is [on? "on" : "off"].")
 
 /obj/machinery/light_switch/interact(mob/user)
 	. = ..()
+	on = !on
 
-	area.lightswitch = !area.lightswitch
+	area.lightswitch = on
 	area.updateicon()
 
 	for(var/obj/machinery/light_switch/L in area)
-		L.update_icon()
+		L.on = on
+		L.updateicon()
 
 	area.power_change()
 
 /obj/machinery/light_switch/power_change()
-	if(area == get_area(src))
+
+	if(!otherarea)
 		if(powered(LIGHT))
 			stat &= ~NOPOWER
 		else
 			stat |= NOPOWER
 
-		update_icon()
+		updateicon()
 
 /obj/machinery/light_switch/emp_act(severity)
 	. = ..()

@@ -239,19 +239,19 @@
 /mob/living/simple_animal/slime/proc/handle_nutrition()
 
 	if(docile) //God as my witness, I will never go hungry again
-		set_nutrition(700) //fuck you for using the base nutrition var
+		nutrition = 700
 		return
 
 	if(prob(15))
-		adjust_nutrition(-(1 + is_adult))
+		nutrition -= 1 + is_adult
 
 	if(nutrition <= 0)
-		set_nutrition(0)
+		nutrition = 0
 		if(prob(75))
 			adjustBruteLoss(rand(0,5))
 
 	else if (nutrition >= get_grow_nutrition() && amount_grown < SLIME_EVOLUTION_THRESHOLD)
-		adjust_nutrition(-20)
+		nutrition -= 20
 		amount_grown++
 		update_action_buttons_icon()
 
@@ -262,7 +262,7 @@
 			Evolve()
 
 /mob/living/simple_animal/slime/proc/add_nutrition(nutrition_to_add = 0)
-	set_nutrition(min((nutrition + nutrition_to_add), get_max_nutrition()))
+	nutrition = min((nutrition + nutrition_to_add), get_max_nutrition())
 	if(nutrition >= get_grow_nutrition())
 		if(powerlevel<10)
 			if(prob(30-powerlevel*2))

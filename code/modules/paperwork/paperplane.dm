@@ -10,13 +10,7 @@
 	resistance_flags = FLAMMABLE
 	max_integrity = 50
 
-	var/hit_probability = 2 //%
 	var/obj/item/paper/internalPaper
-
-/obj/item/paperplane/syndicate
-	desc = "Paper, masterfully folded in the shape of a plane."
-	throwforce = 20 //same as throwing stars, but no chance of embedding.
-	hit_probability = 100 //guaranteed to cause eye damage when it hits a mob.
 
 /obj/item/paperplane/Initialize(mapload, obj/item/paper/newPaper)
 	. = ..()
@@ -28,25 +22,13 @@
 		color = newPaper.color
 		newPaper.forceMove(src)
 	else
-		internalPaper = new(src)
+		internalPaper = new /obj/item/paper(src)
 	update_icon()
 
-/obj/item/paperplane/handle_atom_del(atom/A)
-	if(A == internalPaper)
-		internalPaper = null
-		if(!QDELETED(src))
-			qdel(src)
-	return ..()
-
-/obj/item/paperplane/Exited(atom/movable/AM, atom/newLoc)
-	. = ..()
-	if (AM == internalPaper)
-		internalPaper = null
-		if(!QDELETED(src))
-			qdel(src)
-
 /obj/item/paperplane/Destroy()
-	QDEL_NULL(internalPaper)
+	if(internalPaper)
+		qdel(internalPaper)
+		internalPaper = null
 	return ..()
 
 /obj/item/paperplane/suicide_act(mob/living/user)
@@ -66,7 +48,7 @@
 
 /obj/item/paperplane/attack_self(mob/user)
 	to_chat(user, "<span class='notice'>You unfold [src].</span>")
-	var/obj/item/paper/internal_paper_tmp = internalPaper
+	var/atom/movable/internal_paper_tmp = internalPaper
 	internal_paper_tmp.forceMove(loc)
 	internalPaper = null
 	qdel(src)
@@ -103,19 +85,12 @@
 /obj/item/paperplane/throw_at(atom/target, range, speed, mob/thrower, spin=FALSE, diagonals_first = FALSE, datum/callback/callback)
 	. = ..(target, range, speed, thrower, FALSE, diagonals_first, callback)
 
-/obj/item/paperplane/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
-	if(iscarbon(hit_atom))
-		var/mob/living/carbon/C = hit_atom
-		if(C.can_catch_item(TRUE))
-			var/datum/action/innate/origami/origami_action = locate() in C.actions
-			if(origami_action?.active) //if they're a master of origami and have the ability turned on, force throwmode on so they'll automatically catch the plane.
-				C.throw_mode_on()
-
+/obj/item/paperplane/throw_impact(atom/hit_atom)
 	if(..() || !ishuman(hit_atom))//if the plane is caught or it hits a nonhuman
 		return
 	var/mob/living/carbon/human/H = hit_atom
-	if(prob(hit_probability))
-		if(H.is_eyes_covered())
+	if(prob(2))
+		if((H.head && H.head.flags_cover & HEADCOVERSEYES) || (H.wear_mask && H.wear_mask.flags_cover & MASKCOVERSEYES) || (H.glasses && H.glasses.flags_cover & GLASSESCOVERSEYES))
 			return
 		visible_message("<span class='danger'>\The [src] hits [H] in the eye!</span>")
 		H.adjust_blurriness(6)
@@ -132,11 +107,5 @@
 		return
 	to_chat(user, "<span class='notice'>You fold [src] into the shape of a plane!</span>")
 	user.temporarilyRemoveItemFromInventory(src)
-	var/obj/item/paperplane/plane_type = /obj/item/paperplane
-	//Origami Master
-	var/datum/action/innate/origami/origami_action = locate() in user.actions
-	if(origami_action?.active)
-		plane_type = /obj/item/paperplane/syndicate
-
-	I = new plane_type(user, src)
+	I = new /obj/item/paperplane(user, src)
 	user.put_in_hands(I)

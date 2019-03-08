@@ -4,7 +4,7 @@
 	weight = 200
 	max_occurrences = 1000
 	earliest_start = 0 MINUTES
-	alert_observers = FALSE
+	alertadmins = 0
 
 /datum/round_event/space_dust
 	startWhen		= 1

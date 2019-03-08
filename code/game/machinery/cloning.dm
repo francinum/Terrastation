@@ -19,7 +19,7 @@
 	circuit = /obj/item/circuitboard/machine/clonepod
 
 	var/heal_level //The clone is released once its health reaches this level.
-	var/obj/machinery/computer/cloning/connected //So we remember the connected clone machine.
+	var/obj/machinery/computer/cloning/connected = null //So we remember the connected clone machine.
 	var/mess = FALSE //Need to clean out it if it's full of exploded clone.
 	var/attempting = FALSE //One clone attempt at a time thanks
 	var/speed_coeff
@@ -31,7 +31,7 @@
 	var/internal_radio = TRUE
 	var/obj/item/radio/radio
 	var/radio_key = /obj/item/encryptionkey/headset_med
-	var/radio_channel = RADIO_CHANNEL_MEDICAL
+	var/radio_channel = "Medical"
 
 	var/obj/effect/countdown/clonepod/countdown
 
@@ -74,23 +74,13 @@
 	if(heal_level > 100)
 		heal_level = 100
 
-/obj/machinery/clonepod/examine(mob/user)
-	..()
-	to_chat(user, "<span class='notice'>The <i>linking</i> device can be <i>scanned<i> with a multitool.</span>")
-	if(in_range(user, src) || isobserver(user))
-		to_chat(user, "<span class='notice'>The status display reads: Cloning speed at <b>[speed_coeff*50]%</b>.<br>Predicted amount of cellular damage: <b>[100-heal_level]%</b>.<span>")
-		if(efficiency > 5)
-			to_chat(user, "<span class='notice'>Pod has been upgraded to support autoprocessing and apply beneficial mutations.<span>")
-
 //The return of data disks?? Just for transferring between genetics machine/cloning machine.
 //TO-DO: Make the genetics machine accept them.
 /obj/item/disk/data
 	name = "cloning data disk"
 	icon_state = "datadisk0" //Gosh I hope syndies don't mistake them for the nuke disk.
 	var/list/fields = list()
-	var/list/mutations = list()
-	var/max_mutations = 6
-	var/read_only = FALSE //Well,it's still a floppy disk
+	var/read_only = 0 //Well,it's still a floppy disk
 
 //Disk stuff.
 /obj/item/disk/data/Initialize()
@@ -137,52 +127,52 @@
 	return examine(user)
 
 //Start growing a human clone in the pod!
-/obj/machinery/clonepod/proc/growclone(clonename, ui, mutation_index, mindref, last_death, datum/species/mrace, list/features, factions, list/quirks, datum/bank_account/insurance, list/traumas)
+/obj/machinery/clonepod/proc/growclone(ckey, clonename, ui, se, mindref, datum/species/mrace, list/features, factions, list/quirks, datum/bank_account/insurance)
 	if(panel_open)
-		return NONE
+		return FALSE
 	if(mess || attempting)
-		return NONE
+		return FALSE
 	clonemind = locate(mindref) in SSticker.minds
 	if(!istype(clonemind))	//not a mind
-		return NONE
-	if(clonemind.last_death != last_death) //The soul has advanced, the record has not.
-		return NONE
+		return FALSE
 	if(!QDELETED(clonemind.current))
 		if(clonemind.current.stat != DEAD)	//mind is associated with a non-dead body
-			return NONE
+			return FALSE
 		if(clonemind.current.suiciding) // Mind is associated with a body that is suiciding.
-			return NONE
-	if(!clonemind.active)
+			return FALSE
+	if(clonemind.active)	//somebody is using that mind
+		if( ckey(clonemind.key)!=ckey )
+			return FALSE
+	else
 		// get_ghost() will fail if they're unable to reenter their body
 		var/mob/dead/observer/G = clonemind.get_ghost()
 		if(!G)
-			return NONE
+			return FALSE
 		if(G.suiciding) // The ghost came from a body that is suiciding.
-			return NONE
+			return FALSE
 	if(clonemind.damnation_type) //Can't clone the damned.
 		INVOKE_ASYNC(src, .proc/horrifyingsound)
 		mess = TRUE
 		icon_state = "pod_g"
 		update_icon()
-		return NONE
+		return FALSE
 	current_insurance = insurance
 	attempting = TRUE //One at a time!!
 	countdown.start()
 
 	var/mob/living/carbon/human/H = new /mob/living/carbon/human(src)
 
-	H.hardset_dna(ui, mutation_index, H.real_name, null, mrace, features)
+	H.hardset_dna(ui, se, H.real_name, null, mrace, features)
 
-	if(!H.has_trait(TRAIT_RADIMMUNE))//dont apply mutations if the species is Mutation proof.
-		if(efficiency > 2)
-			var/list/unclean_mutations = (GLOB.not_good_mutations|GLOB.bad_mutations)
-			H.dna.remove_mutation_group(unclean_mutations)
-		if(efficiency > 5 && prob(20))
-			H.easy_randmut(POSITIVE)
-		if(efficiency < 3 && prob(50))
-			var/mob/M = H.easy_randmut(NEGATIVE+MINOR_NEGATIVE)
-			if(ismob(M))
-				H = M
+	if(efficiency > 2)
+		var/list/unclean_mutations = (GLOB.not_good_mutations|GLOB.bad_mutations)
+		H.dna.remove_mutation_group(unclean_mutations)
+	if(efficiency > 5 && prob(20))
+		H.randmutvg()
+	if(efficiency < 3 && prob(50))
+		var/mob/M = H.randmutb()
+		if(ismob(M))
+			H = M
 
 	H.silent = 20 //Prevents an extreme edge case where clones could speak if they said something at exactly the right moment.
 	occupant = H
@@ -194,11 +184,11 @@
 	icon_state = "pod_1"
 	//Get the clone body ready
 	maim_clone(H)
-	H.add_trait(TRAIT_STABLEHEART, CLONING_POD_TRAIT)
-	H.add_trait(TRAIT_EMOTEMUTE, CLONING_POD_TRAIT)
-	H.add_trait(TRAIT_MUTE, CLONING_POD_TRAIT)
-	H.add_trait(TRAIT_NOBREATH, CLONING_POD_TRAIT)
-	H.add_trait(TRAIT_NOCRITDAMAGE, CLONING_POD_TRAIT)
+	H.add_trait(TRAIT_STABLEHEART, "cloning")
+	H.add_trait(TRAIT_EMOTEMUTE, "cloning")
+	H.add_trait(TRAIT_MUTE, "cloning")
+	H.add_trait(TRAIT_NOBREATH, "cloning")
+	H.add_trait(TRAIT_NOCRITDAMAGE, "cloning")
 	H.Unconscious(80)
 
 	clonemind.transfer_to(H)
@@ -213,23 +203,16 @@
 
 	if(H)
 		H.faction |= factions
-		remove_hivemember(H)
 
 		for(var/V in quirks)
 			var/datum/quirk/Q = new V(H)
 			Q.on_clone(quirks[V])
 
-		for(var/t in traumas)
-			var/datum/brain_trauma/BT = t
-			var/datum/brain_trauma/cloned_trauma = BT.on_clone()
-			if(cloned_trauma)
-				H.gain_trauma(cloned_trauma, BT.resilience)
-
 		H.set_cloned_appearance()
 
 		H.set_suicide(FALSE)
 	attempting = FALSE
-	return CLONING_SUCCESS
+	return TRUE
 
 //Grow clones to maturity then kick them out.  FREELOADERS
 /obj/machinery/clonepod/process()
@@ -283,6 +266,9 @@
 				else if(isbodypart(I))
 					var/obj/item/bodypart/BP = I
 					BP.attach_limb(mob_occupant)
+
+			//Premature clones may have brain damage.
+			mob_occupant.adjustBrainLoss(-((speed_coeff / 2) * dmg_mult))
 
 			use_power(7500) //This might need tweaking.
 
@@ -381,7 +367,7 @@
 			fl.forceMove(T)
 		unattached_flesh.Cut()
 		mess = FALSE
-		new /obj/effect/gibspawner/generic(get_turf(src), mob_occupant)
+		new /obj/effect/gibspawner/generic(get_turf(src))
 		audible_message("<span class='italics'>You hear a splat.</span>")
 		icon_state = "pod_0"
 		return
@@ -389,18 +375,16 @@
 	if(!mob_occupant)
 		return
 	current_insurance = null
-	mob_occupant.remove_trait(TRAIT_STABLEHEART, CLONING_POD_TRAIT)
-	mob_occupant.remove_trait(TRAIT_EMOTEMUTE, CLONING_POD_TRAIT)
-	mob_occupant.remove_trait(TRAIT_MUTE, CLONING_POD_TRAIT)
-	mob_occupant.remove_trait(TRAIT_NOCRITDAMAGE, CLONING_POD_TRAIT)
-	mob_occupant.remove_trait(TRAIT_NOBREATH, CLONING_POD_TRAIT)
+	mob_occupant.remove_trait(TRAIT_STABLEHEART, "cloning")
+	mob_occupant.remove_trait(TRAIT_EMOTEMUTE, "cloning")
+	mob_occupant.remove_trait(TRAIT_MUTE, "cloning")
+	mob_occupant.remove_trait(TRAIT_NOCRITDAMAGE, "cloning")
+	mob_occupant.remove_trait(TRAIT_NOBREATH, "cloning")
 
 	if(grab_ghost_when == CLONER_MATURE_CLONE)
 		mob_occupant.grab_ghost()
 		to_chat(occupant, "<span class='notice'><b>There is a bright flash!</b><br><i>You feel like a new being.</i></span>")
 		mob_occupant.flash_act()
-
-	mob_occupant.adjustBrainLoss(mob_occupant.getCloneLoss())
 
 	occupant.forceMove(T)
 	icon_state = "pod_0"
@@ -425,7 +409,7 @@
 		mob_occupant.grab_ghost() // We really just want to make you suffer.
 		flash_color(mob_occupant, flash_color="#960000", flash_time=100)
 		to_chat(mob_occupant, "<span class='warning'><b>Agony blazes across your consciousness as your body is torn apart.</b><br><i>Is this what dying is like? Yes it is.</i></span>")
-		playsound(loc, 'sound/machines/warning-buzzer.ogg', 50, 0)
+		playsound(src.loc, 'sound/machines/warning-buzzer.ogg', 50, 0)
 		SEND_SOUND(mob_occupant, sound('sound/hallucinations/veryfar_noise.ogg',0,1,50))
 		QDEL_IN(mob_occupant, 40)
 
@@ -476,9 +460,10 @@
 		unattached_flesh.Cut()
 
 	H.setCloneLoss(CLONE_INITIAL_DAMAGE)     //Yeah, clones start with very low health, not with random, because why would they start with random health
-	// In addition to being cellularly damaged, they also have no limbs or internal organs.
-	// Applying brainloss is done when the clone leaves the pod, so application of traumas can happen
-	// based on the level of damage sustained.
+	H.setBrainLoss(CLONE_INITIAL_DAMAGE)
+	// In addition to being cellularly damaged and having barely any
+
+	// brain function, they also have no limbs or internal organs.
 
 	if(!H.has_trait(TRAIT_NODISMEMBER))
 		var/static/list/zones = list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG)

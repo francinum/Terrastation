@@ -40,7 +40,7 @@
 /turf/open/floor/noslip,
 /area/shuttle/escape)
 "am" = (
-/obj/structure/reflector/single/mapping{
+/obj/structure/reflector/single/anchored{
 	dir = 6
 	},
 /obj/effect/turf_decal/stripes/line{
@@ -49,11 +49,12 @@
 /turf/open/floor/plating,
 /area/shuttle/escape)
 "an" = (
-/obj/structure/reflector/box/mapping,
+/obj/structure/reflector/box/anchored,
 /turf/open/floor/plating,
 /area/shuttle/escape)
 "ao" = (
-/obj/structure/reflector/single/mapping{
+/obj/structure/reflector/single{
+	anchored = 1;
 	dir = 10
 	},
 /obj/effect/turf_decal/stripes/line{
@@ -96,6 +97,9 @@
 /area/shuttle/escape)
 "aw" = (
 /turf/closed/wall/mineral/titanium/nodiagonal,
+/area/shuttle/escape)
+"ax" = (
+/turf/closed/wall/mineral/titanium/interior,
 /area/shuttle/escape)
 "aA" = (
 /obj/machinery/door/airlock/titanium{
@@ -145,25 +149,27 @@
 /turf/open/floor/plating/airless,
 /area/shuttle/escape)
 "aN" = (
-/obj/structure/reflector/single/mapping{
+/obj/structure/reflector/single/anchored{
 	dir = 6
 	},
 /turf/open/floor/plating/airless,
 /area/shuttle/escape)
 "aO" = (
-/obj/structure/reflector/double/mapping{
+/obj/structure/reflector/double/anchored{
 	dir = 6
 	},
 /turf/open/floor/plating/airless,
 /area/shuttle/escape)
 "aP" = (
-/obj/structure/reflector/double/mapping{
+/obj/structure/reflector/double{
+	anchored = 1;
 	dir = 10
 	},
 /turf/open/floor/plating/airless,
 /area/shuttle/escape)
 "aQ" = (
-/obj/structure/reflector/single/mapping{
+/obj/structure/reflector/single{
+	anchored = 1;
 	dir = 10
 	},
 /turf/open/floor/plating/airless,
@@ -359,13 +365,13 @@ aa
 aa
 "}
 (2,1,1) = {"
-aw
+ae
 ae
 ad
 ac
 ae
 ad
-aw
+ax
 ai
 aD
 UA
@@ -551,13 +557,13 @@ bc
 be
 "}
 (10,1,1) = {"
-aw
+ae
 ae
 ad
 ac
 ae
 ad
-aw
+ax
 ai
 aE
 UA

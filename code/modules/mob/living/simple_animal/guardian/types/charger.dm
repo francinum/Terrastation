@@ -47,18 +47,18 @@
 	if(!charging)
 		..()
 
-/mob/living/simple_animal/hostile/guardian/charger/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+/mob/living/simple_animal/hostile/guardian/charger/throw_impact(atom/A)
 	if(!charging)
 		return ..()
 
-	else if(hit_atom)
-		if(isliving(hit_atom) && hit_atom != summoner)
-			var/mob/living/L = hit_atom
+	else if(A)
+		if(isliving(A) && A != summoner)
+			var/mob/living/L = A
 			var/blocked = FALSE
-			if(hasmatchingsummoner(hit_atom)) //if the summoner matches don't hurt them
+			if(hasmatchingsummoner(A)) //if the summoner matches don't hurt them
 				blocked = TRUE
-			if(ishuman(hit_atom))
-				var/mob/living/carbon/human/H = hit_atom
+			if(ishuman(A))
+				var/mob/living/carbon/human/H = A
 				if(H.check_shields(src, 90, "[name]", attack_type = THROWN_PROJECTILE_ATTACK))
 					blocked = TRUE
 			if(!blocked)

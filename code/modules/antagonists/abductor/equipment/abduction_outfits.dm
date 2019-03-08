@@ -1,6 +1,6 @@
 /datum/outfit/abductor
 	name = "Abductor Basic"
-	uniform = /obj/item/clothing/under/abductor
+	uniform = /obj/item/clothing/under/color/grey //they're greys gettit
 	shoes = /obj/item/clothing/shoes/combat
 	back = /obj/item/storage/backpack
 	ears = /obj/item/radio/headset/abductor
@@ -17,7 +17,7 @@
 		var/obj/item/clothing/suit/armor/abductor/vest/V = locate() in H
 		if(V)
 			console.AddVest(V)
-			V.add_trait(TRAIT_NODROP, ABDUCTOR_VEST_TRAIT)
+			V.item_flags |= NODROP
 
 		var/obj/item/storage/backpack/B = locate() in H
 		if(B)
@@ -34,7 +34,7 @@
 	name = "Abductor Agent"
 	head = /obj/item/clothing/head/helmet/abductor
 	suit = /obj/item/clothing/suit/armor/abductor/vest
-	suit_store = /obj/item/abductor/baton
+	suit_store = /obj/item/abductor_baton
 	belt = /obj/item/storage/belt/military/abductor/full
 
 	backpack_contents = list(

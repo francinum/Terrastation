@@ -259,7 +259,8 @@
 
 /obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/Initialize()
 	. = ..()
-	create_reagents(max_volume, NO_REACT)
+	create_reagents(max_volume)
+	reagents.set_reacting(FALSE)
 	syringes = new
 	known_reagents = list("epinephrine"="Epinephrine","charcoal"="Charcoal")
 	processed_reagents = new
@@ -271,6 +272,11 @@
 /obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/Destroy()
 	STOP_PROCESSING(SSobj, src)
 	return ..()
+
+/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/critfail()
+	..()
+	if(reagents)
+		reagents.set_reacting(TRUE)
 
 /obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/can_attach(obj/mecha/medical/M)
 	if(..())
@@ -304,7 +310,7 @@
 	var/turf/trg = get_turf(target)
 	var/obj/item/reagent_containers/syringe/mechsyringe = syringes[1]
 	mechsyringe.forceMove(get_turf(chassis))
-	reagents.trans_to(mechsyringe, min(mechsyringe.volume, reagents.total_volume), transfered_by = chassis.occupant)
+	reagents.trans_to(mechsyringe, min(mechsyringe.volume, reagents.total_volume))
 	syringes -= mechsyringe
 	mechsyringe.icon = 'icons/obj/chemical.dmi'
 	mechsyringe.icon_state = "syringeproj"
@@ -332,7 +338,7 @@
 						mechsyringe.icon_state = initial(mechsyringe.icon_state)
 						mechsyringe.icon = initial(mechsyringe.icon)
 						mechsyringe.reagents.reaction(M, INJECT)
-						mechsyringe.reagents.trans_to(M, mechsyringe.reagents.total_volume, transfered_by = originaloccupant)
+						mechsyringe.reagents.trans_to(M, mechsyringe.reagents.total_volume)
 						M.take_bodypart_damage(2)
 						log_combat(originaloccupant, M, "shot", "syringegun")
 					break
@@ -460,7 +466,7 @@
 			if(!(D.CanPass(S,src.loc)))
 				occupant_message("Unable to load syringe.")
 				return 0
-		S.reagents.trans_to(src, S.reagents.total_volume, transfered_by = chassis.occupant)
+		S.reagents.trans_to(src, S.reagents.total_volume)
 		S.forceMove(src)
 		syringes += S
 		occupant_message("Syringe loaded.")

@@ -523,8 +523,7 @@
 	var/color2 = rgb(0, 0, 0)
 	nodamage = TRUE
 
-/obj/item/projectile/bullet/reusable/lollipop/Initialize()
-	. = ..()
+/obj/item/projectile/bullet/reusable/lollipop/New()
 	var/obj/item/reagent_containers/food/snacks/lollipop/S = new ammo_type(src)
 	color2 = S.headcolor
 	var/mutable_appearance/head = mutable_appearance('icons/obj/projectiles.dmi', "lollipop_2")
@@ -729,15 +728,17 @@
 	name = "medical hud"
 	icon_state = "healthhud"
 
-/obj/item/borg/sight/hud/med/Initialize()
-	. = ..()
+/obj/item/borg/sight/hud/med/New()
+	..()
 	hud = new /obj/item/clothing/glasses/hud/health(src)
+	return
 
 
 /obj/item/borg/sight/hud/sec
 	name = "security hud"
 	icon_state = "securityhud"
 
-/obj/item/borg/sight/hud/sec/Initialize()
-	. = ..()
+/obj/item/borg/sight/hud/sec/New()
+	..()
 	hud = new /obj/item/clothing/glasses/hud/security(src)
+	return

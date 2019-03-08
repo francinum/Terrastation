@@ -13,9 +13,6 @@
 	bullet_bounce_sound = 'sound/items/welder2.ogg'
 
 	footstep = FOOTSTEP_LAVA
-	barefootstep = FOOTSTEP_LAVA
-	clawfootstep = FOOTSTEP_LAVA
-	heavyfootstep = FOOTSTEP_LAVA
 
 /turf/open/lava/ex_act(severity, target)
 	contents_explosion(severity, target)
@@ -30,7 +27,7 @@
 	return
 
 /turf/open/lava/airless
-	initial_gas_mix = AIRLESS_ATMOS
+	initial_gas_mix = "TEMP=2.7"
 
 /turf/open/lava/Entered(atom/movable/AM)
 	if(burn_stuff(AM))
@@ -43,7 +40,7 @@
 		if(!islava(newloc) && !L.on_fire)
 			L.update_fire()
 
-/turf/open/lava/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
+/turf/open/lava/hitby(atom/movable/AM)
 	if(burn_stuff(AM))
 		START_PROCESSING(SSobj, src)
 
@@ -170,4 +167,4 @@
 	baseturfs = /turf/open/lava/smooth/lava_land_surface
 
 /turf/open/lava/smooth/airless
-	initial_gas_mix = AIRLESS_ATMOS
+	initial_gas_mix = "TEMP=2.7"

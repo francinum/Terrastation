@@ -27,14 +27,12 @@
 
 /obj/item/clipboard/update_icon()
 	cut_overlays()
-	var/list/dat = list()
 	if(toppaper)
-		dat += toppaper.icon_state
-		dat += toppaper.overlays.Copy()
+		add_overlay(toppaper.icon_state)
+		copy_overlays(toppaper)
 	if(haspen)
-		dat += "clipboard_pen"
-	dat += "clipboard_over"
-	add_overlay(dat)
+		add_overlay("clipboard_pen")
+	add_overlay("clipboard_over")
 
 
 /obj/item/clipboard/attackby(obj/item/W, mob/user, params)
@@ -94,14 +92,14 @@
 					to_chat(usr, "<span class='notice'>You slot [W] into [src].</span>")
 
 		if(href_list["write"])
-			var/obj/item/P = locate(href_list["write"]) in src
-			if(istype(P))
+			var/obj/item/P = locate(href_list["write"])
+			if(istype(P) && P.loc == src)
 				if(usr.get_active_held_item())
 					P.attackby(usr.get_active_held_item(), usr)
 
 		if(href_list["remove"])
-			var/obj/item/P = locate(href_list["remove"]) in src
-			if(istype(P))
+			var/obj/item/P = locate(href_list["remove"])
+			if(istype(P) && P.loc == src)
 				P.forceMove(usr.loc)
 				usr.put_in_hands(P)
 				if(P == toppaper)
@@ -113,13 +111,13 @@
 						toppaper = null
 
 		if(href_list["read"])
-			var/obj/item/paper/P = locate(href_list["read"]) in src
-			if(istype(P))
+			var/obj/item/paper/P = locate(href_list["read"])
+			if(istype(P) && P.loc == src)
 				usr.examinate(P)
 
 		if(href_list["top"])
-			var/obj/item/P = locate(href_list["top"]) in src
-			if(istype(P))
+			var/obj/item/P = locate(href_list["top"])
+			if(istype(P) && P.loc == src)
 				toppaper = P
 				to_chat(usr, "<span class='notice'>You move [P.name] to the top.</span>")
 

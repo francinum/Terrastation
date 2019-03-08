@@ -43,15 +43,12 @@
 	var/sides = 6
 	var/result = null
 	var/list/special_faces = list() //entries should match up to sides var if used
-	var/microwave_riggable = TRUE
-
-	var/rigged = DICE_NOT_RIGGED
-	var/rigged_value
+	var/can_be_rigged = TRUE
+	var/rigged = FALSE
 
 /obj/item/dice/Initialize()
 	. = ..()
-	if(!result)
-		result = roll(sides)
+	result = roll(sides)
 	update_icon()
 
 /obj/item/dice/suicide_act(mob/user)
@@ -163,20 +160,15 @@
 /obj/item/dice/attack_self(mob/user)
 	diceroll(user)
 
-/obj/item/dice/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+/obj/item/dice/throw_impact(atom/target)
 	diceroll(thrownby)
 	. = ..()
 
 /obj/item/dice/proc/diceroll(mob/user)
 	result = roll(sides)
-	if(rigged != DICE_NOT_RIGGED && result != rigged_value)
-		if(rigged == DICE_BASICALLY_RIGGED && prob(CLAMP(1/(sides - 1) * 100, 25, 80)))
-			result = rigged_value
-		else if(rigged == DICE_TOTALLY_RIGGED)
-			result = rigged_value
-
-	. = result
-
+	if(rigged && result != rigged)
+		if(prob(CLAMP(1/(sides - 1) * 100, 25, 80)))
+			result = rigged
 	var/fake_result = roll(sides)//Daredevil isn't as good as he used to be
 	var/comment = ""
 	if(sides == 20 && result == 20)
@@ -200,7 +192,6 @@
 	add_overlay("[src.icon_state]-[src.result]")
 
 /obj/item/dice/microwave_act(obj/machinery/microwave/M)
-	if(microwave_riggable)
-		rigged = DICE_BASICALLY_RIGGED
-		rigged_value = result
+	if(can_be_rigged)
+		rigged = result
 	..(M)

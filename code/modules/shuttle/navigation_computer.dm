@@ -22,12 +22,6 @@
 /obj/machinery/computer/camera_advanced/shuttle_docker/Initialize()
 	. = ..()
 	GLOB.navigation_computers += src
-	for(var/V in SSshuttle.stationary)
-		if(!V)
-			continue
-		var/obj/docking_port/stationary/S = V
-		if(jumpto_ports[S.id])
-			z_lock |= S.z
 
 /obj/machinery/computer/camera_advanced/shuttle_docker/Destroy()
 	. = ..()
@@ -257,7 +251,7 @@
 		shuttleId = port.id
 		shuttlePortId = "[port.id]_custom"
 	if(dock)
-		jumpto_ports[dock.id] = TRUE
+		jumpto_ports += dock.id
 
 /mob/camera/aiEye/remote/shuttle_docker
 	visible_icon = FALSE

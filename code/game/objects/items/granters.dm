@@ -23,10 +23,8 @@
 	used = TRUE
 
 /obj/item/book/granter/attack_self(mob/user)
-	if(reading)
+	if(reading == TRUE)
 		to_chat(user, "<span class='warning'>You're already reading this!</span>")
-		return FALSE
-	if(!user.can_read(src))
 		return FALSE
 	return TRUE
 
@@ -64,30 +62,28 @@
 			G.Grant(user)
 		reading = FALSE
 
-/obj/item/book/granter/action/origami
-	granted_action = /datum/action/innate/origami
-	name = "The Art of Origami"
-	desc = "A meticulously in-depth manual explaining the art of paper folding."
-	icon_state = "origamibook"
-	actionname = "origami"
-	oneuse = TRUE
-	remarks = list("Dead-stick stability...", "Symmetry seems to play a rather large factor...", "Accounting for crosswinds... really?", "Drag coefficients of various paper types...", "Thrust to weight ratios?", "Positive dihedral angle?", "Center of gravity forward of the center of lift...")
+/obj/item/book/granter/action/drink_fling
+	granted_action = /datum/action/innate/drink_fling
+	name = "Tapper: This One's For You"
+	desc = "A seminal work on the dying art of booze sliding."
+	icon_state = "barbook"
+	actionname = "drink flinging"
+	oneuse = FALSE
+	remarks = list("The trick is keeping a low center of gravity it seems...", "The viscosity of the liquid is important...", "Accounting for crosswinds... really?", "Drag coefficients of various popular drinking glasses...", "What the heck is laminar flow and why does it matter here?", "Greasing the bar seems like it'd be cheating...", "I don't think I'll be working with superfluids...")
 
-/datum/action/innate/origami
-	name = "Origami Folding"
-	desc = "Toggles your ability to fold and catch robust paper airplanes."
-	button_icon_state = "origami_off"
-	check_flags = NONE
+/datum/action/innate/drink_fling
+	name = "Drink Flinging"
+	desc = "Toggles your ability to satisfyingly throw glasses without spilling them."
+	button_icon_state = "drinkfling_off"
+	check_flags = 0
 
-/datum/action/innate/origami/Activate()
-	to_chat(owner, "<span class='notice'>You will now fold origami planes.</span>")
-	button_icon_state = "origami_on"
+/datum/action/innate/drink_fling/Activate()
+	button_icon_state = "drinkfling_on"
 	active = TRUE
 	UpdateButtonIcon()
 
-/datum/action/innate/origami/Deactivate()
-	to_chat(owner, "<span class='notice'>You will no longer fold origami planes.</span>")
-	button_icon_state = "origami_off"
+/datum/action/innate/drink_fling/Deactivate()
+	button_icon_state = "drinkfling_off"
 	active = FALSE
 	UpdateButtonIcon()
 
@@ -108,10 +104,10 @@
 		if(knownspell.type == S.type)
 			if(user.mind)
 				if(iswizard(user))
-					to_chat(user,"<span class='notice'>You're already far more versed in this spell than this flimsy how-to book can provide.</span>")
+					to_chat(user,"<span class='notice'>You're already far more versed in this spell than this flimsy howto book can provide.</span>")
 				else
 					to_chat(user,"<span class='notice'>You've already read this one.</span>")
-			return FALSE
+			return
 	if(used == TRUE && oneuse == TRUE)
 		recoil(user)
 	else
@@ -122,7 +118,7 @@
 				to_chat(user, "<span class='notice'>You stop reading...</span>")
 				reading = FALSE
 				qdel(S)
-				return FALSE
+				return
 		if(do_after(user,50, user))
 			to_chat(user, "<span class='notice'>You feel like you've experienced enough to cast [spellname]!</span>")
 			user.mind.AddSpell(S)
@@ -171,9 +167,9 @@
 	..()
 	to_chat(user,"<span class='caution'>Your stomach rumbles...</span>")
 	if(user.nutrition)
-		user.set_nutrition(200)
+		user.nutrition = 200
 		if(user.nutrition <= 0)
-			user.set_nutrition(0)
+			user.nutrition = 0
 
 /obj/item/book/granter/spell/blind
 	spell = /obj/effect/proc_holder/spell/targeted/trigger/blind
@@ -256,7 +252,10 @@
 /obj/item/book/granter/spell/barnyard/recoil(mob/living/carbon/user)
 	if(ishuman(user))
 		to_chat(user,"<font size='15' color='red'><b>HORSIE HAS RISEN</b></font>")
-		var/obj/item/clothing/magichead = new /obj/item/clothing/mask/horsehead/cursed(user.drop_location())
+		var/obj/item/clothing/mask/horsehead/magichead = new /obj/item/clothing/mask/horsehead
+		magichead.item_flags |= NODROP		//curses!
+		magichead.flags_inv &= ~HIDEFACE //so you can still see their face
+		magichead.voicechange = TRUE	//NEEEEIIGHH
 		if(!user.dropItemToGround(user.wear_mask))
 			qdel(user.wear_mask)
 		user.equip_to_slot_if_possible(magichead, SLOT_WEAR_MASK, TRUE, TRUE)
@@ -312,9 +311,11 @@
 	if(!martial)
 		return
 	var/datum/martial_art/MA = new martial
-	if(user.mind.has_martialart(MA.id))
-		to_chat(user,"<span class='warning'>You already know [martialname]!</span>")
-		return
+	if(user.mind.martial_art)
+		for(var/datum/martial_art/knownmartial in user.mind.martial_art)
+			if(knownmartial.type == MA.type)
+				to_chat(user,"<span class='warning'>You already know [martialname]!</span>")
+				return
 	if(used == TRUE && oneuse == TRUE)
 		recoil(user)
 	else

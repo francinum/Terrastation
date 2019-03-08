@@ -18,9 +18,6 @@
 	to_chat(user, "<span class='notice'>It's loaded with [credits] credit[( credits > 1 ) ? "s" : ""]</span>")
 	to_chat(user, "<span class='notice'>Alt-Click to split.</span>")
 
-/obj/item/holochip/get_item_credit_value()
-	return credits
-
 /obj/item/holochip/update_icon()
 	name = "\improper [credits] credit holochip"
 	var/rounded_credits = credits

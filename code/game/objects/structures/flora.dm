@@ -63,13 +63,7 @@
 	icon_state = "pinepresents"
 	desc = "A wondrous decorated Christmas tree. It has presents!"
 	var/gift_type = /obj/item/a_gift/anything
-	var/unlimited = FALSE
-	var/static/list/took_presents //shared between all xmas trees
-
-/obj/structure/flora/tree/pine/xmas/presents/Initialize()
-	. = ..()
-	if(!took_presents)
-		took_presents = list()
+	var/list/ckeys_that_took = list()
 
 /obj/structure/flora/tree/pine/xmas/presents/attack_hand(mob/living/user)
 	. = ..()
@@ -78,20 +72,13 @@
 	if(!user.ckey)
 		return
 
-	if(took_presents[user.ckey] && !unlimited)
+	if(ckeys_that_took[user.ckey])
 		to_chat(user, "<span class='warning'>There are no presents with your name on.</span>")
 		return
 	to_chat(user, "<span class='warning'>After a bit of rummaging, you locate a gift with your name on it!</span>")
-
-	if(!unlimited)
-		took_presents[user.ckey] = TRUE
-
+	ckeys_that_took[user.ckey] = TRUE
 	var/obj/item/G = new gift_type(src)
 	user.put_in_hands(G)
-
-/obj/structure/flora/tree/pine/xmas/presents/unlimited
-	desc = "A wonderous decorated Christmas tree. It has a seemly endless supply of presents!"
-	unlimited = TRUE
 
 /obj/structure/flora/tree/dead
 	icon = 'icons/obj/flora/deadtrees.dmi'

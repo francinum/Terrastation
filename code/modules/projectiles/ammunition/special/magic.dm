@@ -22,10 +22,6 @@
 	projectile_type = /obj/item/projectile/magic/teleport
 	harmful = FALSE
 
-/obj/item/ammo_casing/magic/safety
-	projectile_type = /obj/item/projectile/magic/safety
-	harmful = FALSE
-
 /obj/item/ammo_casing/magic/door
 	projectile_type = /obj/item/projectile/magic/door
 	harmful = FALSE

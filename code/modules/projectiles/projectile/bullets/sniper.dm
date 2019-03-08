@@ -34,13 +34,7 @@
 	icon_state = "gauss"
 	name = "penetrator round"
 	damage = 60
-	movement_type = FLYING | UNSTOPPABLE
+	forcedodge = TRUE
 	dismemberment = 0 //It goes through you cleanly.
 	paralyze = 0
 	breakthings = FALSE
-
-/obj/item/projectile/bullet/p50/penetrator/shuttle //Nukeop Shuttle Variety
-	icon_state = "gaussstrong"
-	damage = 25
-	speed = 0.3
-	range = 16

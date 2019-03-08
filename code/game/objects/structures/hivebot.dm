@@ -8,8 +8,8 @@
 	var/bot_type = "norm"
 	var/bot_amt = 10
 
-/obj/structure/hivebot_beacon/Initialize()
-	. = ..()
+/obj/structure/hivebot_beacon/New()
+	..()
 	var/datum/effect_system/smoke_spread/smoke = new
 	smoke.set_up(2, loc)
 	smoke.start()

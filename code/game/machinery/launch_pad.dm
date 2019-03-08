@@ -24,11 +24,6 @@
 	range = initial(range)
 	range += E
 
-/obj/machinery/launchpad/examine(mob/user)
-	..()
-	if(in_range(user, src) || isobserver(user))
-		to_chat(user, "<span class='notice'>The status display reads: Maximum range: <b>[range]</b> units.<span>")
-
 /obj/machinery/launchpad/attackby(obj/item/I, mob/user, params)
 	if(stationary)
 		if(default_deconstruction_screwdriver(user, "lpad-idle-o", "lpad-idle", I))
@@ -135,7 +130,7 @@
 				if(first_inner)
 					log_msg += "empty"
 				log_msg += ")"
-		do_teleport(ROI, dest, no_effects = !first, channel = TELEPORT_CHANNEL_BLUESPACE)
+		do_teleport(ROI, dest, no_effects = !first)
 		first = FALSE
 
 	if (first)

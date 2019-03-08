@@ -48,12 +48,6 @@
 /proc/_image(icon, loc, icon_state, layer, dir)
 	return image(icon, loc, icon_state, layer, dir)
 
-/proc/_istype(object, type)
-	return istype(object, type)
-
-/proc/_ispath(path, type)
-	return ispath(path, type)
-
 /proc/_length(E)
 	return length(E)
 

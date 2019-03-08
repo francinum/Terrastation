@@ -70,6 +70,10 @@
 /area/ruin/unpowered/syndicate_lava_base/telecomms
 	name = "Syndicate Lavaland Telecommunications"
 
+/area/ruin/unpowered/syndicate_lava_base/circuits
+	name = "Syndicate Lavaland Circuit Lab"
+
+
 //Xeno Nest
 
 /area/ruin/unpowered/xenonest

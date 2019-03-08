@@ -8,7 +8,7 @@
 
 /datum/round_event/anomaly
 	var/area/impact_area
-	var/obj/effect/anomaly/anomaly_path = /obj/effect/anomaly/flux
+	var/obj/effect/anomaly/newAnomaly
 	announceWhen	= 1
 
 
@@ -45,8 +45,5 @@
 
 /datum/round_event/anomaly/start()
 	var/turf/T = safepick(get_area_turfs(impact_area))
-	var/newAnomaly
 	if(T)
-		newAnomaly = new anomaly_path(T)
-	if (newAnomaly)
-		announce_to_ghosts(newAnomaly)
+		newAnomaly = new /obj/effect/anomaly/flux(T)

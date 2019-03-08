@@ -1,10 +1,7 @@
 /mob/living/silicon/robot/Process_Spacemove(movement_dir = 0)
-	. = ..()
-	if(.)
-		return TRUE
 	if(ionpulse())
-		return TRUE
-	return FALSE
+		return 1
+	return ..()
 
 /mob/living/silicon/robot/mob_negates_gravity()
 	return magpulse

@@ -72,7 +72,7 @@
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/moth_wings, GLOB.moth_wings_list)
 
 	//For now we will always return none for tail_human and ears.
-	return(list("mcolor" = pick("FFFFFF","7F7F7F", "7FFF7F", "7F7FFF", "FF7F7F", "7FFFFF", "FF7FFF", "FFFF7F"),"ethcolor" = GLOB.color_list_ethereal[pick(GLOB.color_list_ethereal)], "tail_lizard" = pick(GLOB.tails_list_lizard), "tail_human" = "None", "wings" = "None", "snout" = pick(GLOB.snouts_list), "horns" = pick(GLOB.horns_list), "ears" = "None", "frills" = pick(GLOB.frills_list), "spines" = pick(GLOB.spines_list), "body_markings" = pick(GLOB.body_markings_list), "legs" = "Normal Legs", "caps" = pick(GLOB.caps_list), "moth_wings" = pick(GLOB.moth_wings_list)))
+	return(list("mcolor" = pick("FFFFFF","7F7F7F", "7FFF7F", "7F7FFF", "FF7F7F", "7FFFFF", "FF7FFF", "FFFF7F"), "tail_lizard" = pick(GLOB.tails_list_lizard), "tail_human" = "None", "wings" = "None", "snout" = pick(GLOB.snouts_list), "horns" = pick(GLOB.horns_list), "ears" = "None", "frills" = pick(GLOB.frills_list), "spines" = pick(GLOB.spines_list), "body_markings" = pick(GLOB.body_markings_list), "legs" = "Normal Legs", "caps" = pick(GLOB.caps_list), "moth_wings" = pick(GLOB.moth_wings_list)))
 
 /proc/random_hair_style(gender)
 	switch(gender)
@@ -112,13 +112,6 @@
 /proc/random_unique_plasmaman_name(attempts_to_find_unique_name=10)
 	for(var/i in 1 to attempts_to_find_unique_name)
 		. = capitalize(plasmaman_name())
-
-		if(!findname(.))
-			break
-
-/proc/random_unique_ethereal_name(attempts_to_find_unique_name=10)
-	for(var/i in 1 to attempts_to_find_unique_name)
-		. = capitalize(ethereal_name())
 
 		if(!findname(.))
 			break
@@ -363,12 +356,11 @@ GLOBAL_LIST_EMPTY(species_list)
 	var/list/new_args = list(T)
 	if(extra_args)
 		new_args += extra_args
-	var/atom/X
+
 	for(var/j in 1 to amount)
-		X = new spawn_type(arglist(new_args))
+		var/atom/X = new spawn_type(arglist(new_args))
 		if (admin_spawn)
 			X.flags_1 |= ADMIN_SPAWNED_1
-	return X //return the last mob spawned
 
 /proc/spawn_and_random_walk(spawn_type, target, amount, walk_chance=100, max_walk=3, always_max_walk=FALSE, admin_spawn=FALSE)
 	var/turf/T = get_turf(target)
@@ -376,14 +368,10 @@ GLOBAL_LIST_EMPTY(species_list)
 	if(!T)
 		CRASH("attempt to spawn atom type: [spawn_type] in nullspace")
 
-	var/list/spawned_mobs = new(amount)
-
 	for(var/j in 1 to amount)
 		var/atom/movable/X = new spawn_type(T)
 		if (admin_spawn)
 			X.flags_1 |= ADMIN_SPAWNED_1
-
-		spawned_mobs[j] = X
 
 		if(always_max_walk || prob(walk_chance))
 			if(always_max_walk)
@@ -394,8 +382,6 @@ GLOBAL_LIST_EMPTY(species_list)
 			for(var/i in 1 to step_count)
 				step(X, pick(NORTH, SOUTH, EAST, WEST))
 
-	return spawned_mobs
-
 /proc/deadchat_broadcast(message, mob/follow_target=null, turf/turf_target=null, speaker_key=null, message_type=DEADCHAT_REGULAR)
 	message = "<span class='linkify'>[message]</span>"
 	for(var/mob/M in GLOB.player_list)
@@ -405,14 +391,12 @@ GLOBAL_LIST_EMPTY(species_list)
 		else
 			prefs = new
 
-		var/override = FALSE
+		var/adminoverride = 0
 		if(M.client && M.client.holder && (prefs.chat_toggles & CHAT_DEAD))
-			override = TRUE
-		if(M.has_trait(TRAIT_SIXTHSENSE))
-			override = TRUE
-		if(isnewplayer(M) && !override)
+			adminoverride = 1
+		if(isnewplayer(M) && !adminoverride)
 			continue
-		if(M.stat != DEAD && !override)
+		if(M.stat != DEAD && !adminoverride)
 			continue
 		if(speaker_key && speaker_key in prefs.ignoring)
 			continue

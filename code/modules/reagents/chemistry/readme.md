@@ -230,19 +230,19 @@ By default, all atom have a reagents var - but its empty. if you want to use an 
 			'pouring' our reagents into something else.
 
 		atom/proc/is_open_container()
-			Checks atom/var/reagents.flags & OPENCONTAINER.
+			Checks obj/var/container_type & OPENCONTAINER.
 			If this returns 1 , you can use syringes, beakers etc
 			to manipulate the contents of this object.
 			If it's 0, you'll need to write your own custom reagent
 			transfer code since you will not be able to use the standard
 			tools to manipulate it.
 
-		atom/proc/is_injectable(mob/user, allowmobs = TRUE)
+		atom/proc/is_injectable()
 			Checks if something can be injected to.
 			If this returns 1, you can use syringes and droppers
 			to draw from and add to the contents of this object.
 
-		atom/proc/is_drawable(mob/user)
+		atom/proc/is_drawable()
 			Checks if something can be drawn from.
 			If this returns 1, you can use syringes and droppers
 			to draw from the contents of this object.

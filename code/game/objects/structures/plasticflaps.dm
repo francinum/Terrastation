@@ -6,16 +6,11 @@
 	armor = list("melee" = 100, "bullet" = 80, "laser" = 80, "energy" = 100, "bomb" = 50, "bio" = 100, "rad" = 100, "fire" = 50, "acid" = 50)
 	density = FALSE
 	anchored = TRUE
-	layer = BELOW_OBJ_LAYER
+	layer = ABOVE_MOB_LAYER
 	CanAtmosPass = ATMOS_PASS_NO
 
 /obj/structure/plasticflaps/opaque
 	opacity = TRUE
-
-/obj/structure/plasticflaps/Initialize()
-	. = ..()
-	alpha = 0
-	SSvis_overlays.add_vis_overlay(src, icon, icon_state, ABOVE_MOB_LAYER, plane, dir, add_appearance_flags = RESET_ALPHA) //you see mobs under it, but you hit them like they are above it
 
 /obj/structure/plasticflaps/examine(mob/user)
 	. = ..()
@@ -60,15 +55,15 @@
 /obj/structure/plasticflaps/CanAStarPass(ID, to_dir, caller)
 	if(isliving(caller))
 		if(isbot(caller))
-			return TRUE
+			return 1
 
 		var/mob/living/M = caller
 		if(!M.ventcrawler && M.mob_size != MOB_SIZE_TINY)
-			return FALSE
+			return 0
 	var/atom/movable/M = caller
 	if(M && M.pulling)
 		return CanAStarPass(ID, to_dir, M.pulling)
-	return TRUE //diseases, stings, etc can pass
+	return 1 //diseases, stings, etc can pass
 
 /obj/structure/plasticflaps/CanPass(atom/movable/A, turf/T)
 	if(istype(A) && (A.pass_flags & PASSGLASS))
@@ -76,24 +71,24 @@
 
 	var/obj/structure/bed/B = A
 	if(istype(A, /obj/structure/bed) && (B.has_buckled_mobs() || B.density))//if it's a bed/chair and is dense or someone is buckled, it will not pass
-		return FALSE
+		return 0
 
 	if(istype(A, /obj/structure/closet/cardboard))
 		var/obj/structure/closet/cardboard/C = A
 		if(C.move_delay)
-			return FALSE
+			return 0
 
 	if(ismecha(A))
-		return FALSE
+		return 0
 
 	else if(isliving(A)) // You Shall Not Pass!
 		var/mob/living/M = A
 		if(isbot(A)) //Bots understand the secrets
-			return TRUE
+			return 1
 		if(M.buckled && istype(M.buckled, /mob/living/simple_animal/bot/mulebot)) // mulebot passenger gets a free pass.
-			return TRUE
+			return 1
 		if((M.mobility_flags & MOBILITY_STAND) && !M.ventcrawler && M.mob_size != MOB_SIZE_TINY)	//If your not laying down, or a ventcrawler or a small creature, no pass.
-			return FALSE
+			return 0
 	return ..()
 
 /obj/structure/plasticflaps/deconstruct(disassembled = TRUE)

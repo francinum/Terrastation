@@ -39,7 +39,7 @@
 	minimum_distance = 5
 	icon_state = "stickmanranged"
 	icon_living = "stickmanranged"
-	casingtype = /obj/item/ammo_casing/c45
+	casingtype = /obj/item/ammo_casing/c45/nostamina
 	projectilesound = 'sound/misc/bang.ogg'
 	loot = list(/obj/item/gun/ballistic/automatic/pistol/stickman)
 

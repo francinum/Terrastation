@@ -35,10 +35,6 @@
 	name = "syndi-cakes"
 	icon_state = "syndi_cakes"
 
-/obj/item/trash/energybar
-	name = "energybar wrapper"
-	icon_state = "energybar"
-
 /obj/item/trash/waffles
 	name = "waffles tray"
 	icon_state = "waffles"

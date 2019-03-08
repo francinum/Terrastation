@@ -55,13 +55,6 @@
 	D.after_add()
 	infectee.med_hud_set_status()
 
-	var/turf/source_turf = get_turf(infectee)
-	log_virus("[key_name(infectee)] was infected by virus: [src.admin_details()] at [loc_name(source_turf)]")
-
-//Return a string for admin logging uses, should describe the disease in detail
-/datum/disease/proc/admin_details()
-	return "[src.name] : [src.type]"
-
 /datum/disease/proc/stage_act()
 	var/cure = has_cure()
 
@@ -72,17 +65,15 @@
 
 	if(!cure)
 		if(prob(stage_prob))
-			update_stage(min(stage + 1,max_stages))
+			stage = min(stage + 1,max_stages)
 	else
 		if(prob(cure_chance))
-			update_stage(max(stage - 1, 1))
+			stage = max(stage - 1, 1)
 
 	if(disease_flags & CURABLE)
 		if(cure && prob(cure_chance))
 			cure()
 
-/datum/disease/proc/update_stage(new_stage)
-	stage = new_stage
 
 /datum/disease/proc/has_cure()
 	if(!(disease_flags & CURABLE))
@@ -169,8 +160,8 @@
 	affected_mob.diseases -= src		//remove the datum from the list
 	affected_mob.med_hud_set_status()
 	affected_mob = null
-
-//Use this to compare severities
+	
+//Use this to compare severities	
 /proc/get_disease_severity_value(severity)
 	switch(severity)
 		if(DISEASE_SEVERITY_POSITIVE)

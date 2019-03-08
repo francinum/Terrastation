@@ -258,7 +258,7 @@
 			take_damage(1, BURN, 0, 0)
 	..()
 
-/obj/structure/grille/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
+/obj/structure/grille/hitby(AM as mob|obj)
 	if(isobj(AM))
 		if(prob(50) && anchored && !broken)
 			var/obj/O = AM
@@ -291,8 +291,8 @@
 	desc = "A strangely-shaped grille."
 	broken_type = /obj/structure/grille/ratvar/broken
 
-/obj/structure/grille/ratvar/Initialize()
-	. = ..()
+/obj/structure/grille/ratvar/New()
+	..()
 	if(broken)
 		new /obj/effect/temp_visual/ratvar/grille/broken(get_turf(src))
 	else

@@ -7,6 +7,7 @@
 	species = "replicapod"
 	plantname = "Replica Pod"
 	product = /mob/living/carbon/human //verrry special -- Urist
+	container_type = INJECTABLE|DRAWABLE
 	lifespan = 50
 	endurance = 8
 	maturation = 10
@@ -27,7 +28,7 @@
 /obj/item/seeds/replicapod/Initialize()
 	. = ..()
 
-	create_reagents(volume, INJECTABLE|DRAWABLE)
+	create_reagents(volume)
 
 /obj/item/seeds/replicapod/on_reagent_change(changetype)
 	if(changetype == ADD_REAGENT)

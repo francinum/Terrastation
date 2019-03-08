@@ -54,18 +54,18 @@
 	weather_immunities -= "lava"
 	update_icons()
 
-/mob/living/carbon/alien/humanoid/hunter/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+/mob/living/carbon/alien/humanoid/hunter/throw_impact(atom/A)
 
 	if(!leaping)
 		return ..()
 
 	pounce_cooldown = world.time + pounce_cooldown_time
-	if(hit_atom)
-		if(isliving(hit_atom))
-			var/mob/living/L = hit_atom
+	if(A)
+		if(isliving(A))
+			var/mob/living/L = A
 			var/blocked = FALSE
-			if(ishuman(hit_atom))
-				var/mob/living/carbon/human/H = hit_atom
+			if(ishuman(A))
+				var/mob/living/carbon/human/H = A
 				if(H.check_shields(src, 0, "the [name]", attack_type = LEAP_ATTACK))
 					blocked = TRUE
 			if(!blocked)
@@ -77,8 +77,8 @@
 				Paralyze(40, 1, 1)
 
 			toggle_leap(0)
-		else if(hit_atom.density && !hit_atom.CanPass(src))
-			visible_message("<span class ='danger'>[src] smashes into [hit_atom]!</span>", "<span class ='alertalien'>[src] smashes into [hit_atom]!</span>")
+		else if(A.density && !A.CanPass(src))
+			visible_message("<span class ='danger'>[src] smashes into [A]!</span>", "<span class ='alertalien'>[src] smashes into [A]!</span>")
 			Paralyze(40, 1, 1)
 
 		if(leaping)

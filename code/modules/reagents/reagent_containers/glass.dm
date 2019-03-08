@@ -3,7 +3,7 @@
 	amount_per_transfer_from_this = 10
 	possible_transfer_amounts = list(5, 10, 15, 20, 25, 30, 50)
 	volume = 50
-	reagent_flags = OPENCONTAINER
+	container_type = OPENCONTAINER
 	spillable = TRUE
 	resistance_flags = ACID_PROOF
 
@@ -56,9 +56,6 @@
 	if((!proximity) || !check_allowed_items(target,target_self=1))
 		return
 
-	if(!spillable)
-		return
-
 	if(target.is_refillable()) //Something like a glass. Player probably wants to transfer TO it.
 		if(!reagents.total_volume)
 			to_chat(user, "<span class='warning'>[src] is empty!</span>")
@@ -68,7 +65,7 @@
 			to_chat(user, "<span class='warning'>[target] is full.</span>")
 			return
 
-		var/trans = reagents.trans_to(target, amount_per_transfer_from_this, transfered_by = user)
+		var/trans = reagents.trans_to(target, amount_per_transfer_from_this)
 		to_chat(user, "<span class='notice'>You transfer [trans] unit\s of the solution to [target].</span>")
 
 	else if(target.is_drainable()) //A dispenser. Transfer FROM it TO us.
@@ -80,7 +77,7 @@
 			to_chat(user, "<span class='warning'>[src] is full.</span>")
 			return
 
-		var/trans = target.reagents.trans_to(src, amount_per_transfer_from_this, transfered_by = user)
+		var/trans = target.reagents.trans_to(src, amount_per_transfer_from_this)
 		to_chat(user, "<span class='notice'>You fill [src] with [trans] unit\s of the contents of [target].</span>")
 
 	else if(reagents.total_volume)
@@ -103,7 +100,7 @@
 				to_chat(user, "<span class='notice'>[src] is full.</span>")
 			else
 				to_chat(user, "<span class='notice'>You break [E] in [src].</span>")
-				E.reagents.trans_to(src, E.reagents.total_volume, transfered_by = user)
+				E.reagents.trans_to(src, E.reagents.total_volume)
 				qdel(E)
 			return
 	..()
@@ -197,9 +194,12 @@
 		reactions. Can hold up to 50 units."
 	icon_state = "beakernoreact"
 	materials = list(MAT_METAL=3000)
-	reagent_flags = OPENCONTAINER | NO_REACT
 	volume = 50
 	amount_per_transfer_from_this = 10
+
+/obj/item/reagent_containers/glass/beaker/noreact/Initialize()
+	. = ..()
+	reagents.set_reacting(FALSE)
 
 /obj/item/reagent_containers/glass/beaker/bluespace
 	name = "bluespace beaker"
@@ -207,7 +207,7 @@
 		and Element Cuban combined with the Compound Pete. Can hold up to \
 		300 units."
 	icon_state = "beakerbluespace"
-	materials = list(MAT_GLASS = 5000, MAT_PLASMA = 3000, MAT_DIAMOND = 1000, MAT_BLUESPACE = 1000)
+	materials = list(MAT_GLASS=3000)
 	volume = 300
 	amount_per_transfer_from_this = 10
 	possible_transfer_amounts = list(5,10,15,20,25,30,50,100,300)
@@ -273,7 +273,7 @@
 		if(reagents.total_volume < 1)
 			to_chat(user, "<span class='warning'>[src] is out of water!</span>")
 		else
-			reagents.trans_to(O, 5, transfered_by = user)
+			reagents.trans_to(O, 5)
 			to_chat(user, "<span class='notice'>You wet [O] in [src].</span>")
 			playsound(loc, 'sound/effects/slosh.ogg', 25, 1)
 	else if(isprox(O))
@@ -291,11 +291,11 @@
 			to_chat(user, "<span class='userdanger'>[src]'s contents spill all over you!</span>")
 			reagents.reaction(user, TOUCH)
 			reagents.clear_reagents()
-		reagents.flags = NONE
+		container_type = NONE
 
 /obj/item/reagent_containers/glass/bucket/dropped(mob/user)
 	. = ..()
-	reagents.flags = initial(reagent_flags)
+	container_type = initial(container_type)
 
 /obj/item/reagent_containers/glass/bucket/equip_to_best_slot(var/mob/M)
 	if(reagents.total_volume) //If there is water in a bucket, don't quick equip it to the head

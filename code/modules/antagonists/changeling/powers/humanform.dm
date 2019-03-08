@@ -1,12 +1,11 @@
-/datum/action/changeling/humanform
+/obj/effect/proc_holder/changeling/humanform
 	name = "Human Form"
-	desc = "We change into a human. Costs 5 chemicals."
-	button_icon_state = "human_form"
+	desc = "We change into a human."
 	chemical_cost = 5
 	req_dna = 1
 
 //Transform into a human.
-/datum/action/changeling/humanform/sting_action(mob/living/carbon/user)
+/obj/effect/proc_holder/changeling/humanform/sting_action(mob/living/carbon/user)
 	var/datum/antagonist/changeling/changeling = user.mind.has_antag_datum(/datum/antagonist/changeling)
 	var/list/names = list()
 	for(var/datum/changelingprofile/prof in changeling.stored_profiles)
@@ -22,10 +21,10 @@
 	if(!user || user.notransform)
 		return 0
 	to_chat(user, "<span class='notice'>We transform our appearance.</span>")
-	..()
+
 	changeling.purchasedpowers -= src
 
-	var/newmob = user.humanize(TR_KEEPITEMS | TR_KEEPIMPLANTS | TR_KEEPORGANS | TR_KEEPDAMAGE | TR_KEEPVIRUS | TR_KEEPSE)
+	var/newmob = user.humanize(TR_KEEPITEMS | TR_KEEPIMPLANTS | TR_KEEPORGANS | TR_KEEPDAMAGE | TR_KEEPVIRUS)
 
 	changeling_transform(newmob, chosen_prof)
 	return TRUE

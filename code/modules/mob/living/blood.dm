@@ -16,7 +16,7 @@
 
 
 /mob/living/carbon/monkey/handle_blood()
-	if(bodytemperature >= TCRYO && !(has_trait(TRAIT_HUSK))) //cryosleep or husked people do not pump the blood.
+	if(bodytemperature >= TCRYO && !(has_trait(TRAIT_NOCLONE))) //cryosleep or husked people do not pump the blood.
 		//Blood regeneration if there is some space
 		if(blood_volume < BLOOD_VOLUME_NORMAL)
 			blood_volume += 0.1 // regenerate blood VERY slowly
@@ -30,7 +30,7 @@
 		bleed_rate = 0
 		return
 
-	if(bodytemperature >= TCRYO && !(has_trait(TRAIT_HUSK))) //cryosleep or husked people do not pump the blood.
+	if(bodytemperature >= TCRYO && !(has_trait(TRAIT_NOCLONE))) //cryosleep or husked people do not pump the blood.
 
 		//Blood regeneration if there is some space
 		if(blood_volume < BLOOD_VOLUME_NORMAL && !has_trait(TRAIT_NOHUNGER))
@@ -48,7 +48,7 @@
 					nutrition_ratio = 1
 			if(satiety > 80)
 				nutrition_ratio *= 1.25
-			adjust_nutrition(-nutrition_ratio * HUNGER_FACTOR)
+			nutrition = max(0, nutrition - nutrition_ratio * HUNGER_FACTOR)
 			blood_volume = min(BLOOD_VOLUME_NORMAL, blood_volume + 0.5 * nutrition_ratio)
 
 		//Effects of bloodloss
@@ -209,15 +209,13 @@
 		return "blood"
 
 /mob/living/carbon/monkey/get_blood_id()
-	if(!(has_trait(TRAIT_HUSK)))
+	if(!(has_trait(TRAIT_NOCLONE)))
 		return "blood"
 
 /mob/living/carbon/human/get_blood_id()
-	if(has_trait(TRAIT_HUSK))
-		return
 	if(dna.species.exotic_blood)
 		return dna.species.exotic_blood
-	else if((NOBLOOD in dna.species.species_traits))
+	else if((NOBLOOD in dna.species.species_traits) || (has_trait(TRAIT_NOCLONE)))
 		return
 	return "blood"
 

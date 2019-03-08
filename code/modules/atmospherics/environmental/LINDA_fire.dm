@@ -35,11 +35,18 @@
 		if(oxy < 0.5)
 			return 0
 
-		active_hotspot = new /obj/effect/hotspot(src, exposed_volume*25, exposed_temperature)
+		active_hotspot = new /obj/effect/hotspot(src)
+		active_hotspot.temperature = exposed_temperature
+		active_hotspot.volume = exposed_volume*25
 
 		active_hotspot.just_spawned = (current_cycle < SSair.times_fired)
 			//remove just_spawned protection if no longer processing this cell
 		SSair.add_to_active(src, 0)
+	else
+		var/datum/gas_mixture/heating = air_contents.remove_ratio(exposed_volume/air_contents.volume)
+		heating.temperature = exposed_temperature
+		heating.react()
+		assume_air(heating)
 	return igniting
 
 //This is the icon for fire on turfs, also helps for nurturing small fires until they are full tile
@@ -59,13 +66,9 @@
 	var/bypassing = FALSE
 	var/visual_update_tick = 0
 
-/obj/effect/hotspot/Initialize(mapload, starting_volume, starting_temperature)
+/obj/effect/hotspot/Initialize()
 	. = ..()
 	SSair.hotspots += src
-	if(!isnull(starting_volume))
-		volume = starting_volume
-	if(!isnull(starting_temperature))
-		temperature = starting_temperature
 	perform_exposure()
 	setDir(pick(GLOB.cardinals))
 	air_update_turf()
@@ -77,19 +80,22 @@
 
 	location.active_hotspot = src
 
-	bypassing = !just_spawned && (volume > CELL_VOLUME*0.95)
+	if(volume > CELL_VOLUME*0.95)
+		bypassing = TRUE
+	else
+		bypassing = FALSE
 
 	if(bypassing)
-		volume = location.air.reaction_results["fire"]*FIRE_GROWTH_RATE
-		temperature = location.air.temperature
+		if(!just_spawned)
+			volume = location.air.reaction_results["fire"]*FIRE_GROWTH_RATE
+			temperature = location.air.temperature
 	else
 		var/datum/gas_mixture/affected = location.air.remove_ratio(volume/location.air.volume)
-		if(affected) //in case volume is 0
-			affected.temperature = temperature
-			affected.react(src)
-			temperature = affected.temperature
-			volume = affected.reaction_results["fire"]*FIRE_GROWTH_RATE
-			location.assume_air(affected)
+		affected.temperature = temperature
+		affected.react(src)
+		temperature = affected.temperature
+		volume = affected.reaction_results["fire"]*FIRE_GROWTH_RATE
+		location.assume_air(affected)
 
 	for(var/A in location)
 		var/atom/AT = A

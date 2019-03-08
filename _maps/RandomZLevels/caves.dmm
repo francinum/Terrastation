@@ -103,7 +103,7 @@
 	},
 /area/awaymission/caves/BMP_asteroid/level_four)
 "at" = (
-/obj/structure/spawner/skeleton,
+/mob/living/simple_animal/hostile/spawner/skeleton,
 /turf/open/floor/plating/asteroid/basalt/lava{
 	initial_gas_mix = "n2=23;o2=14"
 	},
@@ -164,7 +164,7 @@
 	},
 /area/awaymission/caves/BMP_asteroid/level_four)
 "aB" = (
-/obj/structure/spawner/skeleton,
+/mob/living/simple_animal/hostile/spawner/skeleton,
 /turf/open/floor/engine/cult{
 	initial_gas_mix = "n2=23;o2=14"
 	},
@@ -374,7 +374,7 @@
 	},
 /area/awaymission/caves/BMP_asteroid/level_three)
 "be" = (
-/obj/structure/spawner/mining/goliath,
+/mob/living/simple_animal/hostile/spawner/mining/goliath,
 /turf/open/floor/plating/asteroid/basalt{
 	initial_gas_mix = "n2=23;o2=14"
 	},
@@ -504,7 +504,7 @@
 /area/awaymission/caves/BMP_asteroid/level_three)
 "bw" = (
 /obj/effect/decal/cleanable/blood,
-/obj/structure/spawner/skeleton,
+/mob/living/simple_animal/hostile/spawner/skeleton,
 /turf/open/floor/engine/cult{
 	initial_gas_mix = "n2=23;o2=14"
 	},
@@ -930,7 +930,7 @@
 /turf/closed/wall,
 /area/awaymission/caves/BMP_asteroid/level_two)
 "cL" = (
-/obj/structure/spawner/mining/basilisk,
+/mob/living/simple_animal/hostile/spawner/mining/basilisk,
 /turf/open/floor/plating/asteroid/basalt{
 	initial_gas_mix = "n2=23;o2=14"
 	},
@@ -1642,7 +1642,7 @@
 /turf/open/floor/plasteel,
 /area/awaymission/caves/listeningpost)
 "fb" = (
-/obj/structure/spawner/mining/hivelord,
+/mob/living/simple_animal/hostile/spawner/mining/hivelord,
 /turf/open/floor/plating/asteroid/basalt{
 	initial_gas_mix = "n2=23;o2=14"
 	},
@@ -2127,13 +2127,11 @@
 	},
 /area/awaymission/caves/BMP_asteroid)
 "gC" = (
-/obj/mecha/working/ripley/mining{
-	ruin_mecha = 1
-	},
+/obj/mecha/working/ripley/mining,
 /turf/open/floor/plasteel/recharge_floor,
 /area/awaymission/caves/BMP_asteroid)
 "gD" = (
-/obj/structure/spawner/mining/hivelord,
+/mob/living/simple_animal/hostile/spawner/mining/hivelord,
 /turf/open/floor/plating/asteroid/basalt{
 	initial_gas_mix = "n2=23;o2=14"
 	},
@@ -2206,7 +2204,7 @@
 	},
 /area/awaymission/caves/BMP_asteroid)
 "gQ" = (
-/obj/structure/spawner/mining/basilisk,
+/mob/living/simple_animal/hostile/spawner/mining/basilisk,
 /turf/open/floor/plating/asteroid/basalt{
 	initial_gas_mix = "n2=23;o2=14"
 	},
@@ -2251,6 +2249,10 @@
 	initial_gas_mix = "n2=23;o2=14"
 	},
 /area/awaymission/caves/BMP_asteroid)
+"gW" = (
+/obj/effect/mapping_helpers/planet_z,
+/turf/closed/indestructible/rock,
+/area/space/nearstation)
 "gX" = (
 /obj/effect/baseturf_helper/lava,
 /turf/closed/mineral/volcanic,
@@ -2532,7 +2534,7 @@ aa
 aa
 aa
 aa
-aa
+gW
 "}
 (2,1,1) = {"
 aa

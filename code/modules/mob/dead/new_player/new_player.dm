@@ -72,7 +72,7 @@
 	var/datum/browser/popup = new(src, "playersetup", "<div align='center'>New Player Options</div>", 250, 265)
 	popup.set_window_options("can_close=0")
 	popup.set_content(output)
-	popup.open(FALSE)
+	popup.open(0)
 
 /mob/dead/new_player/Topic(href, href_list[])
 	if(src != usr)
@@ -308,7 +308,7 @@
 					return JOB_UNAVAILABLE_SLOTFULL
 		else
 			return JOB_UNAVAILABLE_SLOTFULL
-	if(is_banned_from(ckey, rank))
+	if(jobban_isbanned(src,rank))
 		return JOB_UNAVAILABLE_BANNED
 	if(QDELETED(src))
 		return JOB_UNAVAILABLE_GENERIC
@@ -384,8 +384,6 @@
 			give_guns(humanc)
 		if(GLOB.summon_magic_triggered)
 			give_magic(humanc)
-		if(GLOB.curse_of_madness_triggered)
-			give_madness(humanc, GLOB.curse_of_madness_triggered)
 
 	GLOB.joined_player_list += character.ckey
 
@@ -469,7 +467,7 @@
 	var/datum/browser/popup = new(src, "latechoices", "Choose Profession", 440, 500)
 	popup.add_stylesheet("playeroptions", 'html/browser/playeroptions.css')
 	popup.set_content(dat)
-	popup.open(FALSE) // FALSE is passed to open so that it doesn't use the onclose() proc
+	popup.open(0) // 0 is passed to open so that it doesn't use the onclose() proc
 
 
 /mob/dead/new_player/proc/create_character(transfer_after)
@@ -480,7 +478,7 @@
 
 	var/frn = CONFIG_GET(flag/force_random_names)
 	if(!frn)
-		frn = is_banned_from(ckey, "Appearance")
+		frn = jobban_isbanned(src, "appearance")
 		if(QDELETED(src))
 			return
 	if(frn)

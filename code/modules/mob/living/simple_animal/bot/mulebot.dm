@@ -23,7 +23,7 @@
 	mob_size = MOB_SIZE_LARGE
 
 	radio_key = /obj/item/encryptionkey/headset_cargo
-	radio_channel = RADIO_CHANNEL_SUPPLY
+	radio_channel = "Supply"
 
 	bot_type = MULE_BOT
 	model = "MULE"
@@ -149,8 +149,7 @@
 	return
 
 /mob/living/simple_animal/bot/mulebot/bullet_act(obj/item/projectile/Proj)
-	. = ..()
-	if(.)
+	if(..())
 		if(prob(50) && !isnull(load))
 			unload(0)
 		if(prob(25))
@@ -581,7 +580,7 @@
 // called when bot reaches current target
 /mob/living/simple_animal/bot/mulebot/proc/at_target()
 	if(!reached_target)
-		radio_channel = RADIO_CHANNEL_SUPPLY //Supply channel
+		radio_channel = "Supply" //Supply channel
 		audible_message("[src] makes a chiming sound!", "<span class='italics'>You hear a chime.</span>")
 		playsound(loc, 'sound/machines/chime.ogg', 50, 0)
 		reached_target = 1
@@ -592,7 +591,7 @@
 				to_chat(calling_ai, "<span class='notice'>[icon2html(src, calling_ai)] [src] wirelessly plays a chiming sound!</span>")
 				playsound(calling_ai, 'sound/machines/chime.ogg',40, 0)
 				calling_ai = null
-				radio_channel = RADIO_CHANNEL_AI_PRIVATE //Report on AI Private instead if the AI is controlling us.
+				radio_channel = "AI Private" //Report on AI Private instead if the AI is controlling us.
 
 		if(load)		// if loaded, unload at target
 			if(report_delivery)

@@ -132,13 +132,6 @@
 	tastes = list("brains" = 1, "meat" = 1)
 	foodtype = RAW | MEAT | TOXIC
 
-/obj/item/reagent_containers/food/snacks/meat/slab/human/mutant/ethereal
-	icon_state = "etherealmeat"
-	desc = "So shiny you feel like ingesting it might make you shine too"
-	filling_color = "#97ee63"
-	list_reagents = list("liquidelectricity" = 3)
-	tastes = list("pure electrictiy" = 2, "meat" = 1)
-	foodtype = RAW | MEAT | TOXIC
 
 ////////////////////////////////////// OTHER MEATS ////////////////////////////////////////////////////////
 
@@ -156,11 +149,6 @@
 /obj/item/reagent_containers/food/snacks/meat/slab/monkey
 	name = "monkey meat"
 	foodtype = RAW | MEAT
-
-/obj/item/reagent_containers/food/snacks/meat/slab/mouse
-	name = "mouse meat"
-	desc = "A slab of mouse meat. Best not eat it raw."
-	foodtype = RAW | MEAT | GROSS
 
 /obj/item/reagent_containers/food/snacks/meat/slab/corgi
 	name = "corgi meat"
@@ -279,15 +267,6 @@
 	slice_path = /obj/item/reagent_containers/food/snacks/meat/rawcutlet/gondola
 	foodtype = RAW | MEAT
 
-/obj/item/reagent_containers/food/snacks/meat/slab/penguin
-	name = "penguin meat"
-	desc = "A slab of penguin meat."
-	list_reagents = list("nutriment" = 2, "cooking_oil" = 3)
-	cooked_type = /obj/item/reagent_containers/food/snacks/meat/steak/penguin
-	slice_path = /obj/item/reagent_containers/food/snacks/meat/rawcutlet/penguin
-	filling_color = "#B22222"
-	tastes = list("beef" = 1, "cod fish" = 1)
-
 ////////////////////////////////////// MEAT STEAKS ///////////////////////////////////////////////////////////
 
 
@@ -338,10 +317,6 @@
 /obj/item/reagent_containers/food/snacks/meat/steak/gondola
 	name = "gondola steak"
 	tastes = list("meat" = 1, "tranquility" = 1)
-
-/obj/item/reagent_containers/food/snacks/meat/steak/penguin
-	name = "penguin steak"
-	tastes = list("beef" = 1, "cod fish" = 1)
 
 //////////////////////////////// MEAT CUTLETS ///////////////////////////////////////////////////////
 
@@ -405,11 +380,6 @@
 	cooked_type = /obj/item/reagent_containers/food/snacks/meat/cutlet/gondola
 	tastes = list("meat" = 1, "tranquility" = 1)
 
-/obj/item/reagent_containers/food/snacks/meat/rawcutlet/penguin
-	name = "raw penguin cutlet"
-	cooked_type = /obj/item/reagent_containers/food/snacks/meat/cutlet/penguin
-	tastes = list("beef" = 1, "cod fish" = 1)
-
 //Cooked cutlets
 
 /obj/item/reagent_containers/food/snacks/meat/cutlet
@@ -449,7 +419,3 @@
 /obj/item/reagent_containers/food/snacks/meat/cutlet/gondola
 	name = "gondola cutlet"
 	tastes = list("meat" = 1, "tranquility" = 1)
-
-/obj/item/reagent_containers/food/snacks/meat/cutlet/penguin
-	name = "penguin cutlet"
-	tastes = list("beef" = 1, "cod fish" = 1)

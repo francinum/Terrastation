@@ -21,7 +21,7 @@
 		return
 	if(!H.mind)
 		return
-	if(H.mind.has_martialart(MARTIALART_KRAVMAGA))
+	if(istype(H.mind.martial_art, /datum/martial_art/krav_maga))
 		style.remove(H)
 	else
 		style.teach(H,1)

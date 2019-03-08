@@ -19,8 +19,7 @@
 	..()
 	eyeobj.visible_icon = TRUE
 	eyeobj.icon = 'icons/mob/cameramob.dmi'
-	eyeobj.icon_state = "abductor_camera"
-	eyeobj.invisibility = INVISIBILITY_OBSERVER
+	eyeobj.icon_state = "generic_camera"
 
 /obj/machinery/computer/camera_advanced/abductor/GrantActions(mob/living/carbon/user)
 	..()
@@ -56,7 +55,8 @@
 		actions += set_droppoint_action
 
 /obj/machinery/computer/camera_advanced/abductor/proc/IsScientist(mob/living/carbon/human/H)
-	return H.has_trait(TRAIT_ABDUCTOR_SCIENTIST_TRAINING)
+	var/datum/species/abductor/S = H.dna.species
+	return S.scientist
 
 /datum/action/innate/teleport_in
 	name = "Send To"

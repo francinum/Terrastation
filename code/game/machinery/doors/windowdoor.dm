@@ -26,9 +26,9 @@
 	. = ..()
 	if(set_dir)
 		setDir(set_dir)
-	if(req_access && req_access.len)
-		icon_state = "[icon_state]"
-		base_state = icon_state
+	if(src.req_access && src.req_access.len)
+		src.icon_state = "[src.icon_state]"
+		src.base_state = src.icon_state
 	for(var/i in 1 to shards)
 		debris += new /obj/item/shard(src)
 	if(rods)
@@ -52,23 +52,23 @@
 	if(density)
 		icon_state = base_state
 	else
-		icon_state = "[base_state]open"
+		icon_state = "[src.base_state]open"
 
 /obj/machinery/door/window/proc/open_and_close()
 	open()
-	if(check_access(null))
+	if(src.check_access(null))
 		sleep(50)
 	else //secure doors close faster
 		sleep(20)
 	close()
 
 /obj/machinery/door/window/Bumped(atom/movable/AM)
-	if( operating || !density )
+	if( operating || !src.density )
 		return
 	if (!( ismob(AM) ))
 		if(ismecha(AM))
 			var/obj/mecha/mecha = AM
-			if(mecha.occupant && allowed(mecha.occupant))
+			if(mecha.occupant && src.allowed(mecha.occupant))
 				open_and_close()
 			else
 				do_animate("deny")
@@ -81,10 +81,10 @@
 	bumpopen(M)
 
 /obj/machinery/door/window/bumpopen(mob/user)
-	if( operating || !density )
+	if( operating || !src.density )
 		return
-	add_fingerprint(user)
-	if(!requiresID())
+	src.add_fingerprint(user)
+	if(!src.requiresID())
 		user = null
 
 	if(allowed(user))
@@ -129,8 +129,8 @@
 	else
 		return 1
 
-/obj/machinery/door/window/open(forced=FALSE)
-	if (operating) //doors can still open when emag-disabled
+/obj/machinery/door/window/open(forced=0)
+	if (src.operating == 1) //doors can still open when emag-disabled
 		return 0
 	if(!forced)
 		if(!hasPower())
@@ -138,14 +138,15 @@
 	if(forced < 2)
 		if(obj_flags & EMAGGED)
 			return 0
-	if(!operating) //in case of emag
+	if(!src.operating) //in case of emag
 		operating = TRUE
 	do_animate("opening")
-	playsound(src, 'sound/machines/windowdoor.ogg', 100, 1)
-	icon_state ="[base_state]open"
+	playsound(src.loc, 'sound/machines/windowdoor.ogg', 100, 1)
+	src.icon_state ="[src.base_state]open"
 	sleep(10)
 
 	density = FALSE
+//	src.sd_set_opacity(0)	//TODO: why is this here? Opaque windoors? ~Carn
 	air_update_turf(1)
 	update_freelook_sight()
 
@@ -153,8 +154,8 @@
 		operating = FALSE
 	return 1
 
-/obj/machinery/door/window/close(forced=FALSE)
-	if (operating)
+/obj/machinery/door/window/close(forced=0)
+	if (src.operating)
 		return 0
 	if(!forced)
 		if(!hasPower())
@@ -164,8 +165,8 @@
 			return 0
 	operating = TRUE
 	do_animate("closing")
-	playsound(src, 'sound/machines/windowdoor.ogg', 100, 1)
-	icon_state = base_state
+	playsound(src.loc, 'sound/machines/windowdoor.ogg', 100, 1)
+	src.icon_state = src.base_state
 
 	density = TRUE
 	air_update_turf(1)
@@ -178,9 +179,9 @@
 /obj/machinery/door/window/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	switch(damage_type)
 		if(BRUTE)
-			playsound(src, 'sound/effects/glasshit.ogg', 90, 1)
+			playsound(loc, 'sound/effects/glasshit.ogg', 90, 1)
 		if(BURN)
-			playsound(src, 'sound/items/welder.ogg', 100, 1)
+			playsound(src.loc, 'sound/items/welder.ogg', 100, 1)
 
 
 /obj/machinery/door/window/deconstruct(disassembled = TRUE)
@@ -208,7 +209,7 @@
 	if(!operating && density && !(obj_flags & EMAGGED))
 		obj_flags |= EMAGGED
 		operating = TRUE
-		flick("[base_state]spark", src)
+		flick("[src.base_state]spark", src)
 		playsound(src, "sparks", 75, 1)
 		sleep(6)
 		operating = FALSE
@@ -228,16 +229,16 @@
 				return
 			I.play_tool_sound(src)
 			panel_open = !panel_open
-			to_chat(user, "<span class='notice'>You [panel_open ? "open":"close"] the maintenance panel of the [name].</span>")
+			to_chat(user, "<span class='notice'>You [panel_open ? "open":"close"] the maintenance panel of the [src.name].</span>")
 			return
 
 		if(I.tool_behaviour == TOOL_CROWBAR)
 			if(panel_open && !density && !operating)
-				user.visible_message("[user] removes the electronics from the [name].", \
-									 "<span class='notice'>You start to remove electronics from the [name]...</span>")
+				user.visible_message("[user] removes the electronics from the [src.name].", \
+									 "<span class='notice'>You start to remove electronics from the [src.name]...</span>")
 				if(I.use_tool(src, user, 40, volume=50))
-					if(panel_open && !density && !operating && loc)
-						var/obj/structure/windoor_assembly/WA = new /obj/structure/windoor_assembly(loc)
+					if(panel_open && !density && !operating && src.loc)
+						var/obj/structure/windoor_assembly/WA = new /obj/structure/windoor_assembly(src.loc)
 						switch(base_state)
 							if("left")
 								WA.facing = "l"
@@ -251,10 +252,10 @@
 								WA.secure = TRUE
 						WA.setAnchored(TRUE)
 						WA.state= "02"
-						WA.setDir(dir)
-						WA.ini_dir = dir
+						WA.setDir(src.dir)
+						WA.ini_dir = src.dir
 						WA.update_icon()
-						WA.created_name = name
+						WA.created_name = src.name
 
 						if(obj_flags & EMAGGED)
 							to_chat(user, "<span class='warning'>You discard the damaged electronics.</span>")
@@ -265,12 +266,12 @@
 
 						var/obj/item/electronics/airlock/ae
 						if(!electronics)
-							ae = new/obj/item/electronics/airlock(drop_location())
+							ae = new/obj/item/electronics/airlock( src.loc )
 							if(req_one_access)
 								ae.one_access = 1
-								ae.accesses = req_one_access
+								ae.accesses = src.req_one_access
 							else
-								ae.accesses = req_access
+								ae.accesses = src.req_access
 						else
 							ae = electronics
 							electronics = null
@@ -295,11 +296,11 @@
 /obj/machinery/door/window/do_animate(animation)
 	switch(animation)
 		if("opening")
-			flick("[base_state]opening", src)
+			flick("[src.base_state]opening", src)
 		if("closing")
-			flick("[base_state]closing", src)
+			flick("[src.base_state]closing", src)
 		if("deny")
-			flick("[base_state]deny", src)
+			flick("[src.base_state]deny", src)
 
 /obj/machinery/door/window/check_access_ntnet(datum/netdata/data)
 	return !requiresID() || ..()

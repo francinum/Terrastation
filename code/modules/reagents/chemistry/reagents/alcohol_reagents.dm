@@ -39,8 +39,6 @@ All effects don't start immediately, but rather get worse over time; the rate is
 		var/booze_power = boozepwr
 		if(C.has_trait(TRAIT_ALCOHOL_TOLERANCE)) //we're an accomplished drinker
 			booze_power *= 0.7
-		if(C.has_trait(TRAIT_LIGHT_DRINKER))
-			booze_power *= 2
 		C.drunkenness = max((C.drunkenness + (sqrt(volume) * booze_power * ALCOHOL_RATE)), 0) //Volume, power, and server alcohol rate effect how quickly one gets drunk
 		var/obj/item/organ/liver/L = C.getorganslot(ORGAN_SLOT_LIVER)
 		if (istype(L))
@@ -335,7 +333,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	id = "grappa"
 	description = "A fine Italian brandy, for when regular wine just isn't alcoholic enough for you."
 	color = "#F8EBF1"
-	boozepwr = 60
+	boozepwr = 45
 	taste_description = "classy bitter sweetness"
 	glass_icon_state = "grappa"
 	glass_name = "glass of grappa"
@@ -381,11 +379,6 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	glass_name = "Hooch"
 	glass_desc = "You've really hit rock bottom now... your liver packed its bags and left last night."
 
-/datum/reagent/consumable/ethanol/hooch/on_mob_life(mob/living/carbon/M)
-	if(M.mind && M.mind.assigned_role == "Assistant")
-		M.heal_bodypart_damage(1,1)
-		. = 1
-	return ..() || .
 
 /datum/reagent/consumable/ethanol/ale
 	name = "Ale"
@@ -658,7 +651,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	id = "irishcream"
 	description = "Whiskey-imbued cream, what else would you expect from the Irish?"
 	color = "#664300" // rgb: 102, 67, 0
-	boozepwr = 50
+	boozepwr = 70
 	quality = DRINK_NICE
 	taste_description = "creamy alcohol"
 	glass_icon_state = "irishcreamglass"
@@ -954,7 +947,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	id = "red_mead"
 	description = "The true Viking drink! Even though it has a strange red color."
 	color = "#C73C00" // rgb: 199, 60, 0
-	boozepwr = 31 //Red drinks are stronger
+	boozepwr = 51 //Red drinks are stronger
 	quality = DRINK_GOOD
 	taste_description = "sweet and salty alcohol"
 	glass_icon_state = "red_meadglass"
@@ -967,7 +960,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	description = "A Viking drink, though a cheap one."
 	color = "#664300" // rgb: 102, 67, 0
 	nutriment_factor = 1 * REAGENTS_METABOLISM
-	boozepwr = 30
+	boozepwr = 50
 	quality = DRINK_NICE
 	taste_description = "sweet, sweet alcohol"
 	glass_icon_state = "meadglass"
@@ -1169,7 +1162,6 @@ All effects don't start immediately, but rather get worse over time; the rate is
 
 /datum/reagent/consumable/ethanol/silencer/on_mob_life(mob/living/carbon/M)
 	if(ishuman(M) && M.job == "Mime")
-		M.silent = max(M.silent, MIMEDRINK_SILENCE_DURATION)
 		M.heal_bodypart_damage(1,1)
 		. = 1
 	return ..() || .
@@ -1332,45 +1324,30 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	id = "neurotoxin"
 	description = "A strong neurotoxin that puts the subject into a death-like state."
 	color = "#2E2E61" // rgb: 46, 46, 97
-	boozepwr = 50
+	boozepwr = 0 //custom drunk effect
 	quality = DRINK_VERYGOOD
 	taste_description = "a numbing sensation"
 	glass_icon_state = "neurotoxinglass"
 	glass_name = "Neurotoxin"
 	glass_desc = "A drink that is guaranteed to knock you silly."
 
-/datum/reagent/consumable/ethanol/neurotoxin/proc/pickt()
-	return (pick(TRAIT_PARALYSIS_L_ARM,TRAIT_PARALYSIS_R_ARM,TRAIT_PARALYSIS_R_LEG,TRAIT_PARALYSIS_L_LEG))
-
 /datum/reagent/consumable/ethanol/neurotoxin/on_mob_life(mob/living/carbon/M)
-	M.set_drugginess(50)
+	M.Paralyze(60, 1, 0)
 	M.dizziness +=2
-	M.adjustBrainLoss(1*REM, 150)
-	if(prob(20))
-		M.adjustStaminaLoss(10)
-		M.drop_all_held_items()
-		to_chat(M, "<span class='notice'>You cant feel your hands!</span>")
-	if(current_cycle > 5)
-		if(prob(20))
-			M.add_trait(pickt(), "neurotoxin")
-			M.adjustStaminaLoss(10)
-		if(current_cycle > 30)
-			M.adjustBrainLoss(2*REM)
-			if(current_cycle > 50 && prob(15))
-				if(!M.undergoing_cardiac_arrest() && M.can_heartattack())
-					M.set_heartattack(TRUE)
-					if(M.stat == CONSCIOUS)
-						M.visible_message("<span class='userdanger'>[M] clutches at [M.p_their()] chest as if [M.p_their()] heart stopped!</span>")
+	switch(current_cycle)
+		if(15 to 45)
+			if(!M.slurring)
+				M.slurring = 1
+			M.slurring += 3
+		if(45 to 55)
+			if(prob(50))
+				M.confused = max(M.confused+3,0)
+		if(55 to 200)
+			M.set_drugginess(55)
+		if(200 to INFINITY)
+			M.adjustToxLoss(2, 0)
+	..()
 	. = 1
-	..()
-
-/datum/reagent/consumable/ethanol/neurotoxin/on_mob_delete(mob/living/carbon/M)
-	M.remove_trait(TRAIT_PARALYSIS_L_ARM, "neurotoxin")
-	M.remove_trait(TRAIT_PARALYSIS_R_ARM, "neurotoxin")
-	M.remove_trait(TRAIT_PARALYSIS_R_LEG, "neurotoxin")
-	M.remove_trait(TRAIT_PARALYSIS_L_LEG, "neurotoxin")
-	M.adjustStaminaLoss(10)
-	..()
 
 /datum/reagent/consumable/ethanol/hippies_delight
 	name = "Hippie's Delight"
@@ -1495,8 +1472,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	glass_desc = "An intimidating and lawful beverage dares you to violate the law and make its day. Still can't drink it on duty, though."
 
 /datum/reagent/consumable/ethanol/quadruple_sec/on_mob_life(mob/living/carbon/M)
-	//Securidrink in line with the Screwdriver for engineers or Nothing for mimes
-	if(M.has_trait(TRAIT_LAW_ENFORCEMENT_METABOLISM))
+	if(M.mind && M.mind.assigned_role in list("Security Officer", "Detective", "Head of Security", "Warden", "Lawyer")) //Securidrink in line with the screwderiver for engineers or nothing for mimes.
 		M.heal_bodypart_damage(1, 1)
 		M.adjustBruteLoss(-2,0)
 		. = 1
@@ -1515,8 +1491,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	glass_desc = "Now you are become law, destroyer of clowns."
 
 /datum/reagent/consumable/ethanol/quintuple_sec/on_mob_life(mob/living/carbon/M)
-	//Securidrink in line with the Screwdriver for engineers or Nothing for mimes but STRONG..
-	if(M.has_trait(TRAIT_LAW_ENFORCEMENT_METABOLISM))
+	if(M.mind && M.mind.assigned_role in list("Security Officer", "Detective", "Head of Security", "Warden", "Lawyer")) //Securidrink in line with the screwderiver for engineers or nothing for mimes but STRONG..
 		M.heal_bodypart_damage(2,2,2)
 		M.adjustBruteLoss(-5,0)
 		M.adjustOxyLoss(-5,0)
@@ -1674,7 +1649,6 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	glass_desc = "A boozy minty hot cocoa that warms your belly on a cold night."
 
 /datum/reagent/consumable/ethanol/peppermint_patty/on_mob_life(mob/living/carbon/M)
-	M.apply_status_effect(/datum/status_effect/throat_soothed)
 	M.adjust_bodytemperature(5 * TEMPERATURE_DAMAGE_COEFFICIENT, 0, BODYTEMP_NORMAL)
 	..()
 
@@ -1785,7 +1759,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 /datum/reagent/consumable/ethanol/fernet/on_mob_life(mob/living/carbon/M)
 	if(M.nutrition <= NUTRITION_LEVEL_STARVING)
 		M.adjustToxLoss(1*REM, 0)
-	M.adjust_nutrition(-5)
+	M.nutrition = max(M.nutrition - 5, 0)
 	M.overeatduration = 0
 	return ..()
 
@@ -1804,7 +1778,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 /datum/reagent/consumable/ethanol/fernet_cola/on_mob_life(mob/living/carbon/M)
 	if(M.nutrition <= NUTRITION_LEVEL_STARVING)
 		M.adjustToxLoss(0.5*REM, 0)
-	M.adjust_nutrition(- 3)
+	M.nutrition = max(M.nutrition - 3, 0)
 	M.overeatduration = 0
 	return ..()
 
@@ -1822,7 +1796,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	glass_desc = "A glass of Fanciulli. It's just Manhattan with Fernet."
 
 /datum/reagent/consumable/ethanol/fanciulli/on_mob_life(mob/living/carbon/M)
-	M.adjust_nutrition(-5)
+	M.nutrition = max(M.nutrition - 5, 0)
 	M.overeatduration = 0
 	return ..()
 
@@ -1855,26 +1829,6 @@ All effects don't start immediately, but rather get worse over time; the rate is
 		M.adjustStaminaLoss(35)
 		. = TRUE
 	..()
-
-/datum/reagent/consumable/ethanol/blank_paper
-	name = "Blank Paper"
-	id = "blank_paper"
-	description = "A bubbling glass of blank paper. Just looking at it makes you feel fresh."
-	nutriment_factor = 1 * REAGENTS_METABOLISM
-	color = "#DCDCDC" // rgb: 220, 220, 220
-	boozepwr = 20
-	quality = DRINK_GOOD
-	taste_description = "bubbling possibility"
-	glass_icon_state = "blank_paper"
-	glass_name = "glass of blank paper"
-	glass_desc = "A fizzy cocktail for those looking to start fresh."
-
-/datum/reagent/consumable/ethanol/blank_paper/on_mob_life(mob/living/carbon/M)
-	if(ishuman(M) && M.job == "Mime")
-		M.silent = max(M.silent, MIMEDRINK_SILENCE_DURATION)
-		M.heal_bodypart_damage(1,1)
-		. = 1
-	return ..()
 
 /datum/reagent/consumable/ethanol/fruit_wine
 	name = "Fruit Wine"

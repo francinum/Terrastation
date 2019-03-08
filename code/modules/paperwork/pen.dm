@@ -150,6 +150,9 @@
 /*
  * Sleepypens
  */
+/obj/item/pen/sleepy
+	container_type = OPENCONTAINER
+
 
 /obj/item/pen/sleepy/attack(mob/living/M, mob/user)
 	if(!istype(M))
@@ -158,13 +161,12 @@
 	if(..())
 		if(reagents.total_volume)
 			if(M.reagents)
-				reagents.reaction(M, INJECT, reagents.total_volume)
-				reagents.trans_to(M, reagents.total_volume, transfered_by = user)
+				reagents.trans_to(M, reagents.total_volume)
 
 
 /obj/item/pen/sleepy/Initialize()
 	. = ..()
-	create_reagents(45, OPENCONTAINER)
+	create_reagents(45)
 	reagents.add_reagent("chloralhydratedelayed", 20)
 	reagents.add_reagent("mutetoxin", 15)
 	reagents.add_reagent("tirizene", 10)

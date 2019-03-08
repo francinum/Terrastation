@@ -44,7 +44,6 @@ Difficulty: Medium
 	wander = FALSE
 	del_on_death = TRUE
 	blood_volume = BLOOD_VOLUME_NORMAL
-	internal_type = /obj/item/gps/internal/miner
 	medal_type = BOSS_MEDAL_MINER
 	var/obj/item/melee/transforming/cleaving_saw/miner/miner_saw
 	var/time_until_next_transform = 0
@@ -52,7 +51,7 @@ Difficulty: Medium
 	var/dash_cooldown = 15
 	var/guidance = FALSE
 	deathmessage = "falls to the ground, decaying into glowing particles."
-	deathsound = "bodyfall"
+	death_sound = "bodyfall"
 
 	do_footstep = TRUE
 
@@ -81,6 +80,7 @@ Difficulty: Medium
 
 /mob/living/simple_animal/hostile/megafauna/blood_drunk_miner/Initialize()
 	. = ..()
+	internal = new/obj/item/gps/internal/miner(src)
 	miner_saw = new(src)
 
 /mob/living/simple_animal/hostile/megafauna/blood_drunk_miner/adjustHealth(amount, updating_health = TRUE, forced = FALSE)

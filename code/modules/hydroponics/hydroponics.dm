@@ -46,12 +46,6 @@
 	maxwater = tmp_capacity * 50 // Up to 300
 	maxnutri = tmp_capacity * 5 // Up to 30
 
-/obj/machinery/hydroponics/constructable/examine(mob/user)
-	..()
-	if(in_range(user, src) || isobserver(user))
-		to_chat(user, "<span class='notice'>The status display reads: Tray efficiency at <b>[rating*100]%</b>.<span>")
-
-
 /obj/machinery/hydroponics/Destroy()
 	if(myseed)
 		qdel(myseed)
@@ -729,7 +723,7 @@
 			var/datum/reagents/S = new /datum/reagents() //This is a strange way, but I don't know of a better one so I can't fix it at the moment...
 			S.my_atom = H
 
-			reagent_source.reagents.trans_to(S,split, transfered_by = user)
+			reagent_source.reagents.trans_to(S,split)
 			if(istype(reagent_source, /obj/item/reagent_containers/food/snacks) || istype(reagent_source, /obj/item/reagent_containers/pill))
 				qdel(reagent_source)
 

@@ -18,7 +18,7 @@
 		user.changeNext_move(CLICK_CD_RANGE)
 	user.newtonian_move(get_dir(target, user))
 	update_icon()
-	return TRUE
+	return 1
 
 /obj/item/ammo_casing/proc/ready_proj(atom/target, mob/living/user, quiet, zone_override = "")
 	if (!BB)
@@ -32,13 +32,13 @@
 	BB.suppressed = quiet
 
 	if(reagents && BB.reagents)
-		reagents.trans_to(BB, reagents.total_volume, transfered_by = user) //For chemical darts/bullets
+		reagents.trans_to(BB, reagents.total_volume) //For chemical darts/bullets
 		qdel(reagents)
 
 /obj/item/ammo_casing/proc/throw_proj(atom/target, turf/targloc, mob/living/user, params, spread)
 	var/turf/curloc = get_turf(user)
 	if (!istype(targloc) || !istype(curloc) || !BB)
-		return FALSE
+		return 0
 
 	var/firing_dir
 	if(BB.firer)
@@ -54,7 +54,7 @@
 		BB.preparePixelProjectile(target, user, params, spread)
 	BB.fire(null, direct_target)
 	BB = null
-	return TRUE
+	return 1
 
 /obj/item/ammo_casing/proc/spread(turf/target, turf/current, distro)
 	var/dx = abs(target.x - current.x)

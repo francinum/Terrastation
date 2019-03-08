@@ -359,7 +359,7 @@ Delayed insert mode was removed in mysql 7 and only works with MyISAM type table
 		return
 
 	//strip sensitive stuff
-	if(findtext(message, ": OpenConnection("))
-		message = "OpenConnection CENSORED"
+	if(findtext(message, ": CreateConnection("))
+		message = "CreateConnection CENSORED"
 
 	log_sql("BSQL_DEBUG: [message]")

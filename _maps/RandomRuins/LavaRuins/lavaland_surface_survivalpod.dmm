@@ -87,6 +87,7 @@
 /obj/effect/decal/cleanable/blood,
 /obj/effect/decal/cleanable/blood/drip,
 /obj/effect/decal/cleanable/blood/footprints{
+	icon_state = "blood1";
 	dir = 1
 	},
 /turf/open/floor/pod/dark,
@@ -98,11 +99,14 @@
 /turf/open/floor/pod/dark,
 /area/ruin/powered)
 "s" = (
-/obj/effect/decal/cleanable/blood/footprints,
+/obj/effect/decal/cleanable/blood/footprints{
+	icon_state = "blood1"
+	},
 /turf/open/floor/plating/asteroid/basalt/lava_land_surface,
 /area/lavaland/surface/outdoors)
 "t" = (
 /obj/effect/decal/cleanable/blood/footprints{
+	icon_state = "blood1";
 	dir = 1
 	},
 /obj/machinery/door/airlock/survival_pod/glass,
@@ -110,6 +114,7 @@
 /area/ruin/powered)
 "u" = (
 /obj/effect/decal/cleanable/blood/footprints{
+	icon_state = "blood1";
 	dir = 8
 	},
 /obj/effect/decal/cleanable/blood/drip,
@@ -117,9 +122,12 @@
 /area/lavaland/surface/outdoors)
 "v" = (
 /obj/effect/decal/cleanable/blood/footprints{
+	icon_state = "blood1";
 	dir = 8
 	},
-/obj/effect/decal/cleanable/blood/footprints,
+/obj/effect/decal/cleanable/blood/footprints{
+	icon_state = "blood1"
+	},
 /turf/open/floor/plating/asteroid/basalt/lava_land_surface,
 /area/lavaland/surface/outdoors)
 "w" = (
@@ -131,6 +139,7 @@
 "x" = (
 /obj/effect/decal/cleanable/blood/drip,
 /obj/effect/decal/cleanable/blood/footprints{
+	icon_state = "blood1";
 	dir = 1
 	},
 /turf/open/floor/plating/asteroid/basalt/lava_land_surface,
@@ -140,18 +149,22 @@
 	pixel_y = 32
 	},
 /obj/effect/decal/cleanable/blood/footprints{
+	icon_state = "blood1";
 	dir = 8
 	},
 /turf/open/floor/plating/asteroid/basalt/lava_land_surface,
 /area/lavaland/surface/outdoors)
 "z" = (
 /obj/effect/decal/cleanable/blood/footprints{
+	icon_state = "blood1";
 	dir = 8
 	},
 /turf/open/floor/plating/asteroid/basalt/lava_land_surface,
 /area/lavaland/surface/outdoors)
 "A" = (
-/obj/effect/decal/cleanable/blood/footprints,
+/obj/effect/decal/cleanable/blood/footprints{
+	icon_state = "blood1"
+	},
 /obj/effect/decal/cleanable/blood/drip,
 /turf/open/floor/plating/asteroid/basalt/lava_land_surface,
 /area/lavaland/surface/outdoors)

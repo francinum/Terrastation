@@ -5,8 +5,7 @@
 /mob/living/silicon/robot/get_active_held_item()
 	return module_active
 
-/obj/item/proc/cyborg_unequip(mob/user)
-	return
+
 
 /mob/living/silicon/robot/proc/uneq_module(obj/item/O)
 	if(!O)
@@ -38,7 +37,6 @@
 		O.item_flags &= ~DROPDEL //we shouldn't HAVE things with DROPDEL_1 in our modules, but better safe than runtiming horribly
 
 	O.forceMove(module) //Return item to module so it appears in its contents, so it can be taken out again.
-	O.cyborg_unequip(src)
 
 	hud_used.update_robot_modules_display()
 	return 1

@@ -5,6 +5,7 @@
 	icon_state = "water"
 	density = TRUE
 	anchored = FALSE
+	container_type = DRAINABLE | AMOUNT_VISIBLE
 	pressure_resistance = 2*ONE_ATMOSPHERE
 	max_integrity = 300
 	var/tank_volume = 1000 //In units, how much the dispenser can hold
@@ -23,7 +24,7 @@
 		return ..()
 
 /obj/structure/reagent_dispensers/Initialize()
-	create_reagents(tank_volume, DRAINABLE | AMOUNT_VISIBLE)
+	create_reagents(tank_volume)
 	reagents.add_reagent(reagent_id, tank_volume)
 	. = ..()
 
@@ -81,7 +82,7 @@
 	boom()
 
 /obj/structure/reagent_dispensers/fueltank/bullet_act(obj/item/projectile/P)
-	. = ..()
+	..()
 	if(!QDELETED(src)) //wasn't deleted by the projectile's effects.
 		if(!P.nodamage && ((P.damage_type == BURN) || (P.damage_type == BRUTE)))
 			log_bomber(P.firer, "detonated a", src, "via projectile")
@@ -97,7 +98,7 @@
 			if(W.reagents.has_reagent("welding_fuel", W.max_fuel))
 				to_chat(user, "<span class='warning'>Your [W.name] is already full!</span>")
 				return
-			reagents.trans_to(W, W.max_fuel, transfered_by = user)
+			reagents.trans_to(W, W.max_fuel)
 			user.visible_message("<span class='notice'>[user] refills [user.p_their()] [W.name].</span>", "<span class='notice'>You refill [W].</span>")
 			playsound(src, 'sound/effects/refill.ogg', 50, 1)
 			W.update_icon()

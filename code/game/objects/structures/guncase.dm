@@ -77,7 +77,7 @@
 
 	var/datum/browser/popup = new(user, "gunlocker", "<div align='center'>[name]</div>", 350, 300)
 	popup.set_content(dat)
-	popup.open(FALSE)
+	popup.open(0)
 
 /obj/structure/guncase/Topic(href, href_list)
 	if(href_list["retrieve"])

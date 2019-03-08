@@ -80,13 +80,13 @@
 	..()
 	if(active)
 		GET_COMPONENT(slipper, /datum/component/slippery)
-		slipper.Slip(src, M)
+		slipper.Slip(M)
 
 /obj/item/melee/transforming/energy/sword/bananium/throw_impact(atom/hit_atom, throwingdatum)
 	. = ..()
 	if(active)
 		GET_COMPONENT(slipper, /datum/component/slippery)
-		slipper.Slip(src, hit_atom)
+		slipper.Slip(hit_atom)
 
 /obj/item/melee/transforming/energy/sword/bananium/attackby(obj/item/I, mob/living/user, params)
 	if((world.time > next_trombone_allowed) && istype(I, /obj/item/melee/transforming/energy/sword/bananium))
@@ -109,7 +109,7 @@
 		transform_weapon(user, TRUE)
 	user.visible_message("<span class='suicide'>[user] is [pick("slitting [user.p_their()] stomach open with", "falling on")] [src]! It looks like [user.p_theyre()] trying to commit seppuku, but the blade slips off of [user.p_them()] harmlessly!</span>")
 	GET_COMPONENT(slipper, /datum/component/slippery)
-	slipper.Slip(src, user)
+	slipper.Slip(user)
 	return SHAME
 
 //BANANIUM SHIELD
@@ -145,15 +145,14 @@
 			C.throw_mode_on() //so they can catch it on the return.
 	return ..()
 
-/obj/item/shield/energy/bananium/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+/obj/item/shield/energy/bananium/throw_impact(atom/hit_atom)
 	if(active)
-		var/caught = hit_atom.hitby(src, FALSE, FALSE, throwingdatum=throwingdatum)
+		var/caught = hit_atom.hitby(src, 0, 0)
 		if(iscarbon(hit_atom) && !caught)//if they are a carbon and they didn't catch it
 			GET_COMPONENT(slipper, /datum/component/slippery)
-			slipper.Slip(src, hit_atom)
+			slipper.Slip(hit_atom)
 		if(thrownby && !caught)
-			sleep(1)
-			throw_at(thrownby, throw_range+2, throw_speed, null, TRUE)
+			throw_at(thrownby, throw_range+2, throw_speed, null, 1)
 	else
 		return ..()
 
@@ -217,11 +216,11 @@
 
 /obj/item/clothing/mask/fakemoustache/sticky/Initialize()
 	. = ..()
-	add_trait(TRAIT_NODROP, STICKY_MOUSTACHE_TRAIT)
+	item_flags |= NODROP
 	addtimer(CALLBACK(src, .proc/unstick), unstick_time)
 
 /obj/item/clothing/mask/fakemoustache/sticky/proc/unstick()
-	remove_trait(TRAIT_NODROP, STICKY_MOUSTACHE_TRAIT)
+	item_flags &= ~NODROP
 
 //DARK H.O.N.K. AND CLOWN MECH WEAPONS
 

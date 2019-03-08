@@ -1,36 +1,26 @@
 #define ASH_WALKER_SPAWN_THRESHOLD 2
 //The ash walker den consumes corpses or unconscious mobs to create ash walker eggs. For more info on those, check ghost_role_spawners.dm
-/obj/structure/lavaland/ash_walker
+/mob/living/simple_animal/hostile/spawner/lavaland/ash_walker
 	name = "necropolis tendril nest"
 	desc = "A vile tendril of corruption. It's surrounded by a nest of rapidly growing eggs..."
-	icon = 'icons/mob/nest.dmi'
 	icon_state = "ash_walker_nest"
-
-	move_resist=INFINITY // just killing it tears a massive hole in the ground, let's not move it
-	anchored = TRUE
-	density = TRUE
-
-	resistance_flags = FIRE_PROOF | LAVA_PROOF
-	max_integrity = 200
-
-
-	var/faction = list("ashwalker")
+	icon_living = "ash_walker_nest"
+	icon_dead = "ash_walker_nest"
+	faction = list("ashwalker")
+	health = 200
+	maxHealth = 200
+	loot = list(/obj/effect/collapse)
 	var/meat_counter = 6
 
-/obj/structure/lavaland/ash_walker/Initialize()
-	.=..()
-	START_PROCESSING(SSprocessing, src)	
-
-/obj/structure/lavaland/ash_walker/deconstruct(disassembled)
+/mob/living/simple_animal/hostile/spawner/lavaland/ash_walker/death()
 	new /obj/item/assembly/signaler/anomaly (get_step(loc, pick(GLOB.alldirs)))
-	new	/obj/effect/collapse(loc)
 	return ..()
 
-/obj/structure/lavaland/ash_walker/process()
+/mob/living/simple_animal/hostile/spawner/lavaland/ash_walker/Life()
 	consume()
-	spawn_mob()
+	return ..()
 
-/obj/structure/lavaland/ash_walker/proc/consume()
+/mob/living/simple_animal/hostile/spawner/lavaland/ash_walker/proc/consume()
 	for(var/mob/living/H in view(src, 1)) //Only for corpse right next to/on same tile
 		if(H.stat)
 			visible_message("<span class='warning'>Serrated tendrils eagerly pull [H] to [src], tearing the body apart as its blood seeps over the eggs.</span>")
@@ -43,9 +33,9 @@
 			else
 				meat_counter++
 			H.gib()
-			obj_integrity = min(obj_integrity + max_integrity*0.05,max_integrity)//restores 5% hp of tendril
+			adjustHealth(-maxHealth * 0.05)//restores 5% hp of tendril
 
-/obj/structure/lavaland/ash_walker/proc/spawn_mob()
+/mob/living/simple_animal/hostile/spawner/lavaland/ash_walker/spawn_mob()
 	if(meat_counter >= ASH_WALKER_SPAWN_THRESHOLD)
 		new /obj/effect/mob_spawn/human/ash_walker(get_step(loc, pick(GLOB.alldirs)))
 		visible_message("<span class='danger'>One of the eggs swells to an unnatural size and tumbles free. It's ready to hatch!</span>")

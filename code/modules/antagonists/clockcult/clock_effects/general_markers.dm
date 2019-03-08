@@ -6,8 +6,8 @@
 	alpha = 200
 	layer = MASSIVE_OBJ_LAYER
 
-/obj/effect/clockwork/general_marker/Initialize()
-	. = ..()
+/obj/effect/clockwork/general_marker/New()
+	..()
 	animate(src, alpha = 0, time = 10)
 	QDEL_IN(src, 10)
 

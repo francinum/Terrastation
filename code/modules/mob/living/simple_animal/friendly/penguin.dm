@@ -14,13 +14,8 @@
 	speak_chance = 1
 	turns_per_move = 10
 	icon = 'icons/mob/penguins.dmi'
-	butcher_results = list(/obj/item/organ/ears/penguin = 1, /obj/item/reagent_containers/food/snacks/meat/slab/penguin = 3)
 
 	do_footstep = TRUE
-
-/mob/living/simple_animal/pet/penguin/Initialize()
-	. = ..()
-	AddComponent(/datum/component/waddling)
 
 /mob/living/simple_animal/pet/penguin/emperor
 	name = "Emperor penguin"
@@ -31,7 +26,6 @@
 	icon_dead = "penguin_dead"
 	butcher_results = list()
 	gold_core_spawnable = FRIENDLY_SPAWN
-	butcher_results = list(/obj/item/organ/ears/penguin = 1, /obj/item/reagent_containers/food/snacks/meat/slab/penguin = 3)
 
 /mob/living/simple_animal/pet/penguin/emperor/shamebrero
 	name = "Shamebrero penguin"
@@ -52,4 +46,3 @@
 	density = FALSE
 	pass_flags = PASSMOB
 	mob_size = MOB_SIZE_SMALL
-	butcher_results = list(/obj/item/organ/ears/penguin = 1, /obj/item/reagent_containers/food/snacks/meat/slab/penguin = 1)

@@ -4,7 +4,7 @@
 		humans, butchering all other living things to \
 		sustain the zombie, smashing open airlock doors and opening \
 		child-safe caps on bottles."
-	item_flags = ABSTRACT | DROPDEL
+	item_flags = NODROP | ABSTRACT | DROPDEL
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	icon = 'icons/effects/blood.dmi'
 	icon_state = "bloodhand_left"
@@ -14,9 +14,7 @@
 	force = 21 // Just enough to break airlocks with melee attacks
 	damtype = "brute"
 
-/obj/item/zombie_hand/Initialize()
-	. = ..()
-	add_trait(TRAIT_NODROP, HAND_REPLACEMENT_TRAIT)
+	var/removing_airlock = FALSE
 
 /obj/item/zombie_hand/equipped(mob/user, slot)
 	. = ..()
@@ -73,4 +71,4 @@
 		user.adjustCloneLoss(-hp_gained, 0)
 		user.updatehealth()
 		user.adjustBrainLoss(-hp_gained) // Zom Bee gibbers "BRAAAAISNSs!1!"
-		user.set_nutrition(min(user.nutrition + hp_gained, NUTRITION_LEVEL_FULL))
+		user.nutrition = min(user.nutrition + hp_gained, NUTRITION_LEVEL_FULL)

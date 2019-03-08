@@ -74,7 +74,7 @@ Actual Adjacent procs :
 	return b.f - a.f
 
 //wrapper that returns an empty list if A* failed to find a path
-/proc/get_path_to(caller, end, dist, maxnodes, maxnodedepth = 30, mintargetdist, adjacent = /turf/proc/reachableTurftest, id=null, turf/exclude=null, simulated_only = TRUE)
+/proc/get_path_to(caller, end, dist, maxnodes, maxnodedepth = 30, mintargetdist, adjacent = /turf/proc/reachableTurftest, id=null, turf/exclude=null, simulated_only = 1)
 	var/l = SSpathfinder.mobs.getfree(caller)
 	while(!l)
 		stoplag(3)
@@ -86,7 +86,7 @@ Actual Adjacent procs :
 		path = list()
 	return path
 
-/proc/cir_get_path_to(caller, end, dist, maxnodes, maxnodedepth = 30, mintargetdist, adjacent = /turf/proc/reachableTurftest, id=null, turf/exclude=null, simulated_only = TRUE)
+/proc/cir_get_path_to(caller, end, dist, maxnodes, maxnodedepth = 30, mintargetdist, adjacent = /turf/proc/reachableTurftest, id=null, turf/exclude=null, simulated_only = 1)
 	var/l = SSpathfinder.circuits.getfree(caller)
 	while(!l)
 		stoplag(3)
@@ -97,19 +97,19 @@ Actual Adjacent procs :
 		path = list()
 	return path
 
-/proc/AStar(caller, _end, dist, maxnodes, maxnodedepth = 30, mintargetdist, adjacent = /turf/proc/reachableTurftest, id=null, turf/exclude=null, simulated_only = TRUE)
+/proc/AStar(caller, _end, dist, maxnodes, maxnodedepth = 30, mintargetdist, adjacent = /turf/proc/reachableTurftest, id=null, turf/exclude=null, simulated_only = 1)
 	//sanitation
 	var/turf/end = get_turf(_end)
 	var/turf/start = get_turf(caller)
 	if(!start || !end)
 		stack_trace("Invalid A* start or destination")
-		return FALSE
+		return 0
 	if( start.z != end.z || start == end ) //no pathfinding between z levels
-		return FALSE
+		return 0
 	if(maxnodes)
 		//if start turf is farther than maxnodes from end turf, no need to do anything
 		if(call(start, dist)(end) > maxnodes)
-			return FALSE
+			return 0
 		maxnodedepth = maxnodes //no need to consider path longer than maxnodes
 	var/datum/Heap/open = new /datum/Heap(/proc/HeapPathWeightCompare) //the open list
 	var/list/openc = new() //open list for node check
@@ -198,12 +198,12 @@ Actual Adjacent procs :
 	var/rdir = ((adir & MASK_ODD)<<1)|((adir & MASK_EVEN)>>1)
 	for(var/obj/structure/window/W in src)
 		if(!W.CanAStarPass(ID, adir))
-			return TRUE
+			return 1
 	for(var/obj/machinery/door/window/W in src)
 		if(!W.CanAStarPass(ID, adir))
-			return TRUE
+			return 1
 	for(var/obj/O in T)
 		if(!O.CanAStarPass(ID, rdir, caller))
-			return TRUE
+			return 1
 
-	return FALSE
+	return 0

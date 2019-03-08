@@ -20,7 +20,7 @@
 		L.apply_status_effect(STATUS_EFFECT_EXERCISED)
 
 /obj/structure/weightmachine
-	name = "weight machine"
+	name = "Weight Machine"
 	desc = "Just looking at this thing makes you feel tired."
 	density = TRUE
 	anchored = TRUE

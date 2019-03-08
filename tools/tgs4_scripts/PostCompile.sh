@@ -1,13 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
 #load dep exports
-#need to switch to game dir for Dockerfile weirdness
-original_dir=$PWD
-cd $1
-. dependencies.sh
-cd $original_dir
+. "$1/dependencies.sh"
 
 #find out what we have (+e is important for this)
 set +e
@@ -68,6 +64,7 @@ fi
 
 echo "Deploying rust-g..."
 cd rust-g
+git clean -fxd
 git checkout $RUST_G_VERSION
 ~/.cargo/bin/cargo build --release
 mv target/release/librust_g.so $1/rust_g
@@ -75,9 +72,10 @@ cd ..
 
 echo "Deploying BSQL..."
 cd BSQL
+git clean -fxd
 git checkout $BSQL_VERSION
-mkdir -p mysql
-mkdir -p artifacts
+mkdir mysql
+mkdir artifacts
 cd artifacts
 cmake .. -DCMAKE_CXX_COMPILER=g++-6 -DMARIA_LIBRARY=/usr/lib/i386-linux-gnu/libmariadb.so.2
 make
@@ -94,7 +92,6 @@ shopt -s extglob dotglob
 mv !(build) build
 shopt -u dotglob
 
-chmod +x build/tools/deploy.sh
 build/tools/deploy.sh $1 $1/build
 
 rm -rf build

@@ -8,8 +8,6 @@
 	var/sound1 = 'sound/weapons/zapbang.ogg'
 	var/sound2 = 'sound/weapons/zapbang.ogg'
 
-	var/say_destination = TRUE
-
 /obj/effect/proc_holder/spell/targeted/area_teleport/perform(list/targets, recharge = 1,mob/living/user = usr)
 	var/thearea = before_cast(targets)
 	if(!thearea || !cast_check(1))
@@ -60,7 +58,7 @@
 		var/success = FALSE
 		while(tempL.len)
 			attempt = pick(tempL)
-			do_teleport(target, attempt, channel = TELEPORT_CHANNEL_MAGIC)
+			target.Move(attempt)
 			if(get_turf(target) == attempt)
 				success = TRUE
 				break
@@ -68,25 +66,23 @@
 				tempL.Remove(attempt)
 
 		if(!success)
-			do_teleport(target, L, forceMove = TRUE, channel = TELEPORT_CHANNEL_MAGIC)
+			target.forceMove(L)
 			playsound(get_turf(user), sound2, 50,1)
+
+	return
 
 /obj/effect/proc_holder/spell/targeted/area_teleport/invocation(area/chosenarea = null,mob/user = usr)
 	if(!invocation_area || !chosenarea)
 		..()
 	else
-		var/words
-		if(say_destination)
-			words = "[invocation] [uppertext(chosenarea.name)]"
-		else
-			words = "[invocation]"
-
 		switch(invocation_type)
 			if("shout")
-				user.say(words, forced = "spell")
+				user.say("[invocation] [uppertext(chosenarea.name)]", forced = "spell")
 				if(user.gender==MALE)
 					playsound(user.loc, pick('sound/misc/null.ogg','sound/misc/null.ogg'), 100, 1)
 				else
 					playsound(user.loc, pick('sound/misc/null.ogg','sound/misc/null.ogg'), 100, 1)
 			if("whisper")
-				user.whisper(words, forced = "spell")
+				user.whisper("[invocation] [uppertext(chosenarea.name)]", forced = "spell")
+
+	return
