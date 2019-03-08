@@ -134,9 +134,6 @@ LOG_MANIFEST
 ## log mecha actions
 # LOG_MECHA
 
-## log virus and actions
-LOG_VIRUS
-
 ##Log camera pictures - Must have picture logging enabled
 PICTURE_LOGGING_CAMERA
 
@@ -224,16 +221,16 @@ CHECK_RANDOMIZER
 # SERVER ss13.example.com:2506
 
 ## forum address
-# FORUMURL http://tgstation13.org/phpBB/index.php
+# FORUMURL https://terrastation.ddmers.com/phpBB/
 
 ## Wiki address
-# WIKIURL http://www.tgstation13.org/wiki
+# WIKIURL https://terrastation.ddmers.com/wiki/Main_Page
 
 ## Rules address
-# RULESURL http://www.tgstation13.org/wiki/Rules
+# RULESURL https://terrastation.ddmers.com/wiki/Rules
 
 ## Github address
-# GITHUBURL https://www.github.com/tgstation/tgstation
+# GITHUBURL https://github.com/DDMers/Terrastation
 
 ## Round specific stats address
 ## Link to round specific parsed logs; IE statbus. It is appended with the RoundID automatically by ticker/Reboot()
@@ -389,8 +386,6 @@ AUTOADMIN_RANK Game Master
 #CLIENT_WARN_MESSAGE Byond released 511 as the stable release. You can set the framerate your client runs at, which makes the game feel very different and cool. Shortly after its release we will end up using 511 client features and you will be forced to update.
 CLIENT_ERROR_VERSION 511
 CLIENT_ERROR_MESSAGE Your version of byond is not supported. Please upgrade.
-## The minimum build needed for joining the server, if using 512, a good minimum build would be 1421 as that disables the Middle Mouse Button exploit.
-CLIENT_ERROR_BUILD 1421
 
 ## TOPIC RATE LIMITING
 ## This allows you to limit how many topic calls (clicking on an interface window) the client can do in any given game second and/or game minute.
